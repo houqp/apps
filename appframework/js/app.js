@@ -52,7 +52,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
     '$rootScope', 'Router', function($rootScope, Router) {
       var init;
       init = function() {
-        return $rootScope.$broadcast('routesLoaded');
+        return $rootScope.$broadcast('oCRoutesLoaded');
       };
       return Router.registerLoadedCallback(init);
     }
@@ -187,7 +187,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
         this._router = _router;
         this._initialized = false;
         this._shelvedRequests = [];
-        this._$rootScope.$on('routesLoaded', function() {
+        this._$rootScope.$on('oCRoutesLoaded', function() {
           _this._executeShelvedRequests();
           _this._initialized = true;
           return _this._shelvedRequests = [];
@@ -351,9 +351,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
         });
         if (angular.isDefined(options.hideOnFocusLost) && options.hideOnFocusLost) {
           $(document.body).click(function() {
-            return $rootScope.$broadcast('oclostFocus');
+            return $rootScope.$broadcast('oCLostFocus');
           });
-          $rootScope.$on('oclostFocus', function(scope, params) {
+          $rootScope.$on('oCLostFocus', function(scope, params) {
             if (params !== slideArea) {
               if (slideArea.is(':visible') && !slideArea.is(':animated')) {
                 return slideArea.slideUp();
@@ -361,11 +361,11 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
             }
           });
           slideArea.click(function(e) {
-            $rootScope.$broadcast('oclostFocus', slideArea);
+            $rootScope.$broadcast('oCLostFocus', slideArea);
             return e.stopPropagation();
           });
           return elm.click(function(e) {
-            $rootScope.$broadcast('oclostFocus', slideArea);
+            $rootScope.$broadcast('oCLostFocus', slideArea);
             return e.stopPropagation();
           });
         }

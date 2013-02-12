@@ -43,7 +43,7 @@ angular.module('OC', []).config ['$httpProvider', ($httpProvider) ->
 
 angular.module('OC').run ['$rootScope', 'Router', ($rootScope, Router) ->
         init = ->
-                $rootScope.$broadcast('routesLoaded')
+                $rootScope.$broadcast('oCRoutesLoaded')
 
         # this registers a callback that is executed once the routes have
         # finished loading. Before this you cant really do request

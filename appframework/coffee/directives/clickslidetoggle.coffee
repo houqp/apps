@@ -46,19 +46,19 @@ angular.module('OC').directive 'clickSlideToggle',
 		# active element doesnt get slid up
 		if angular.isDefined(options.hideOnFocusLost) and options.hideOnFocusLost
 			$(document.body).click ->
-				$rootScope.$broadcast 'oclostFocus'
+				$rootScope.$broadcast 'oCLostFocus'
 
-			$rootScope.$on 'oclostFocus', (scope, params) ->
+			$rootScope.$on 'oCLostFocus', (scope, params) ->
 				if params != slideArea
 					if slideArea.is(':visible') and not slideArea.is(':animated')
 						slideArea.slideUp()
 
 			slideArea.click (e) ->
-				$rootScope.$broadcast 'oclostFocus', slideArea
+				$rootScope.$broadcast 'oCLostFocus', slideArea
 				e.stopPropagation()
 
 			elm.click (e) ->
-				$rootScope.$broadcast 'oclostFocus', slideArea
+				$rootScope.$broadcast 'oCLostFocus', slideArea
 				e.stopPropagation()
 
 ]
