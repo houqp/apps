@@ -5,7 +5,7 @@ all: compile
 
 deps:
 	cd $(CURDIR)
-	npm install --save-dev
+	npm install --deps
 
 watch: compile
 	export CHROME_BIN=$(chrome_bin) && export FIREFOX_BIN=$(firefox_bin) && \

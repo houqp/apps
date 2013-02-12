@@ -39,7 +39,7 @@ module.exports = (grunt) ->
 				' * <%= meta.pkg.description %> - v<%= meta.version %>\n' +
 				' *\n' +
 				' * Copyright (c) <%= grunt.template.today("yyyy") %> - ' +
-				'<%= meta.pkg.author %>\n' +
+				'<%= meta.pkg.author.name %> <<%= meta.pkg.author.email %>>\n' +
 				' *\n' +
 				' * This file is licensed under the Affero General Public License version 3 or later.\n' +
 				' * See the COPYING-README file\n' +
@@ -87,6 +87,8 @@ module.exports = (grunt) ->
 				'level': 'ignore'
 			'indentation':
 				'level': 'ignore'
+			'no_trailing_whitespace':
+				'level': 'warn'
 
 		watch: 
 			app: 
@@ -108,7 +110,7 @@ module.exports = (grunt) ->
 	grunt.registerTask('run', ['watch'])
 	grunt.registerTask('lint', ['coffeelint'])
 	grunt.registerTask('compile', [
-			#'coffeelint'
+			'coffeelint'
 			'coffee'
 			'wrap'
 			'concat:app'

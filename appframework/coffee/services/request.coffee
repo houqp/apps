@@ -35,7 +35,8 @@ angular.module('OC').factory '_Request', ->
 				@_shelvedRequests = []
 
 
-		request: (route, routeParams={}, data={}, onSuccess=null, onFailure=null, config={}) ->
+		request: (route, routeParams={}, data={}, onSuccess=null,
+					onFailure=null, config={}) ->
 			# if routes are not ready yet, save the request
 			if not @_initialized
 				@_shelveRequest(route, routeParams, data, method, config)
@@ -43,7 +44,7 @@ angular.module('OC').factory '_Request', ->
 
 			url = @_router.generate(route, routeParams)
 
-			defaultConfig = 
+			defaultConfig =
 				method: 'GET'
 				url: url
 				data: data
