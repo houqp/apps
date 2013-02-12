@@ -31,8 +31,10 @@ basePath = '../';
 files = [
 	JASMINE,
 	JASMINE_ADAPTER,
+	'vendor/jquery-1.9.1/jquery-1.9.1.js',
 	'vendor/angular-1.0.4/angular.js',
 	'vendor/angular-1.0.4/angular-mocks.js',
+	'tests/mocks/owncloud.js',
 	'build/app.js',
 	'build/tests.js'
 ];
