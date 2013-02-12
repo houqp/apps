@@ -1,11 +1,14 @@
-all: compile
+firefox_bin=/usr/bin/firefox
+chrome_bin=/usr/bin/chromium
 
+all: compile
 
 deps:
 	cd $(CURDIR)
 	npm install --save-dev
 
 watch: compile
+	export CHROME_BIN=$(chrome_bin) && export FIREFOX_BIN=$(firefox_bin) && \
 	$(CURDIR)/node_modules/.bin/grunt --config $(CURDIR)/Gruntfile.coffee testacular & \
 	$(CURDIR)/node_modules/.bin/grunt --config $(CURDIR)/Gruntfile.coffee run
 
