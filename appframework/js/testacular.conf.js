@@ -31,8 +31,8 @@ basePath = './';
 files = [
 	JASMINE,
 	JASMINE_ADAPTER,
-	'../3rdparty/js/angular-1.0.4/angular.js',
-	'../3rdparty/js/angular-1.0.4/angular-mocks.js',
+	'vendor/angular-1.0.4/angular.js',
+	'vendor/angular-1.0.4/angular-mocks.js',
 	'build/app.js',
 	'build/tests.js'
 ];

@@ -44,9 +44,10 @@ module.exports = (grunt) ->
 				' * This file is licensed under the Affero General Public License version 3 or later.\n' +
 				' * See the COPYING-README file\n' +
 				' *\n' + 
-				' */'
+				' */\n\n' +
+				' /* Generated with Coffee-Script */\n'
 			build: 'build/'
-			production: '../js/'
+			production: './'
 
 		concat:
 			app: 
@@ -58,7 +59,7 @@ module.exports = (grunt) ->
 				dest: '<%= meta.production %>app.js'
 		wrap:
 			app:
-				src: '<%= meta.build %>app.js'
+				src: '<%= meta.production %>app.js'
 				dest: ''
 				wrapper: [
 					'(function(angular, $, OC, oc_requesttoken){'
@@ -112,8 +113,8 @@ module.exports = (grunt) ->
 	grunt.registerTask('compile', [
 			'coffeelint'
 			'coffee'
-			'wrap'
 			'concat:app'
+			'wrap'
 		]
 	)
 
