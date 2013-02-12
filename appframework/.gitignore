@@ -1,2 +1,5 @@
 report/
 structure.xml
+coffee/build/
+node_modules/
+*.log
