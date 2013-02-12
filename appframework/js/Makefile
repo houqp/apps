@@ -1,7 +1,7 @@
 firefox_bin=/usr/bin/firefox
 chrome_bin=/usr/bin/chromium
 
-all: compile
+all: compile ci
 
 deps:
 	cd $(CURDIR)

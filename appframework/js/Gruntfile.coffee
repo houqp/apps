@@ -101,9 +101,9 @@ module.exports = (grunt) ->
 
 		testacular: 
 			unit: 
-				configFile: 'testacular.conf.js'
+				configFile: 'config/testacular.conf.js'
 			continuous:
-				configFile: 'testacular.conf.js'
+				configFile: 'config/testacular.conf.js'
 				singleRun: true
 				browsers: ['PhantomJS']
 

@@ -1,6 +1,6 @@
 report/
 structure.xml
-coffee/build/
+build/
 node_modules/
 *.log
 test-results.xml
