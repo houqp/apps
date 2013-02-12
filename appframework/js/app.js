@@ -42,28 +42,66 @@
 
 }).call(this);
 
+(function() {
 
-/*
+  angular.module('OC').directive('clickSlideToggle', [
+    '$rootScope', function($rootScope) {
+      return function(scope, elm, attr) {
+        var options, slideArea;
+        options = scope.$eval(attr.clickSlideToggle);
+        if (angular.isDefined(options.selector)) {
+          slideArea = $(options.selector);
+        } else {
+          slideArea = elm;
+        }
+        elm.click(function() {
+          if (slideArea.is(':visible') && !slideArea.is(':animated')) {
+            return slideArea.slideUp();
+          } else {
+            return slideArea.slideDown();
+          }
+        });
+        if (angular.isDefined(options.hideOnFocusLost) && options.hideOnFocusLost) {
+          $(document.body).click(function() {
+            return $rootScope.$broadcast('oCLostFocus');
+          });
+          $rootScope.$on('oCLostFocus', function(scope, params) {
+            if (params !== slideArea) {
+              if (slideArea.is(':visible') && !slideArea.is(':animated')) {
+                return slideArea.slideUp();
+              }
+            }
+          });
+          slideArea.click(function(e) {
+            $rootScope.$broadcast('oCLostFocus', slideArea);
+            return e.stopPropagation();
+          });
+          return elm.click(function(e) {
+            $rootScope.$broadcast('oCLostFocus', slideArea);
+            return e.stopPropagation();
+          });
+        }
+      };
+    }
+  ]);
 
-ownCloud - App Framework
+}).call(this);
 
-@author Bernhard Posselt
-@copyright 2012 Bernhard Posselt nukeawhale@gmail.com
+(function() {
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
-License as published by the Free Software Foundation; either
-version 3 of the License, or any later version.
+  angular.module('OC').directive('forwardClick', function() {
+    return function(scope, elm, attr) {
+      var options;
+      options = scope.$eval(attr.forwardClick);
+      if (angular.isDefined(options.selector)) {
+        return elm.click(function() {
+          return $(options.selector).trigger('click');
+        });
+      }
+    };
+  });
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU AFFERO GENERAL PUBLIC LICENSE for more details.
-
-You should have received a copy of the GNU Affero General Public
-License along with this library.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
+}).call(this);
 
 (function() {
 
@@ -72,29 +110,6 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
   });
 
 }).call(this);
-
-
-/*
-
-ownCloud - App Framework
-
-@author Bernhard Posselt
-@copyright 2012 Bernhard Posselt nukeawhale@gmail.com
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
-License as published by the Free Software Foundation; either
-version 3 of the License, or any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU AFFERO GENERAL PUBLIC LICENSE for more details.
-
-You should have received a copy of the GNU Affero General Public
-License along with this library.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 
 (function() {
 
@@ -130,29 +145,6 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
   });
 
 }).call(this);
-
-
-/*
-
-ownCloud - App Framework
-
-@author Bernhard Posselt
-@copyright 2012 Bernhard Posselt nukeawhale@gmail.com
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
-License as published by the Free Software Foundation; either
-version 3 of the License, or any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU AFFERO GENERAL PUBLIC LICENSE for more details.
-
-You should have received a copy of the GNU Affero General Public
-License along with this library.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 
 (function() {
 
@@ -258,140 +250,10 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 }).call(this);
 
-
-/*
-
-ownCloud - App Framework
-
-@author Bernhard Posselt
-@copyright 2012 Bernhard Posselt nukeawhale@gmail.com
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
-License as published by the Free Software Foundation; either
-version 3 of the License, or any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU AFFERO GENERAL PUBLIC LICENSE for more details.
-
-You should have received a copy of the GNU Affero General Public
-License along with this library.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
 (function() {
 
   angular.module('OC').factory('Router', function() {
     return OC.Router;
-  });
-
-}).call(this);
-
-
-/*
-
-ownCloud - App Framework
-
-@author Bernhard Posselt
-@copyright 2012 Bernhard Posselt nukeawhale@gmail.com
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
-License as published by the Free Software Foundation; either
-version 3 of the License, or any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU AFFERO GENERAL PUBLIC LICENSE for more details.
-
-You should have received a copy of the GNU Affero General Public
-License along with this library.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-(function() {
-
-  angular.module('OC').directive('clickSlideToggle', [
-    '$rootScope', function($rootScope) {
-      return function(scope, elm, attr) {
-        var options, slideArea;
-        options = scope.$eval(attr.clickSlideToggle);
-        if (angular.isDefined(options.selector)) {
-          slideArea = $(options.selector);
-        } else {
-          slideArea = elm;
-        }
-        elm.click(function() {
-          if (slideArea.is(':visible') && !slideArea.is(':animated')) {
-            return slideArea.slideUp();
-          } else {
-            return slideArea.slideDown();
-          }
-        });
-        if (angular.isDefined(options.hideOnFocusLost) && options.hideOnFocusLost) {
-          $(document.body).click(function() {
-            return $rootScope.$broadcast('oCLostFocus');
-          });
-          $rootScope.$on('oCLostFocus', function(scope, params) {
-            if (params !== slideArea) {
-              if (slideArea.is(':visible') && !slideArea.is(':animated')) {
-                return slideArea.slideUp();
-              }
-            }
-          });
-          slideArea.click(function(e) {
-            $rootScope.$broadcast('oCLostFocus', slideArea);
-            return e.stopPropagation();
-          });
-          return elm.click(function(e) {
-            $rootScope.$broadcast('oCLostFocus', slideArea);
-            return e.stopPropagation();
-          });
-        }
-      };
-    }
-  ]);
-
-}).call(this);
-
-
-/*
-
-ownCloud - App Framework
-
-@author Bernhard Posselt
-@copyright 2012 Bernhard Posselt nukeawhale@gmail.com
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
-License as published by the Free Software Foundation; either
-version 3 of the License, or any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU AFFERO GENERAL PUBLIC LICENSE for more details.
-
-You should have received a copy of the GNU Affero General Public
-License along with this library.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-(function() {
-
-  angular.module('OC').directive('forwardClick', function() {
-    return function(scope, elm, attr) {
-      var options;
-      options = scope.$eval(attr.forwardClick);
-      if (angular.isDefined(options.selector)) {
-        return elm.click(function() {
-          return $(options.selector).trigger('click');
-        });
-      }
-    };
   });
 
 }).call(this);

@@ -1,26 +1,21 @@
 describe '_Publisher', ->
 
-	publisher = null
-	oc_requesttoken = null
-	modelMock = 
-		handle: jasmine.createSpy()
-
-	beforeEach ->
-		module 'OC'
-		inject (_Publisher) ->
-			publisher = new _Publisher()
+	beforeEach module 'OC'
+	beforeEach =>
+		@modelMock =
+			handle: jasmine.createSpy()
+	beforeEach =>
+		inject (_Publisher) =>
+			@publisher = new _Publisher()
 
 
-	it 'should publish data to subscribed model', 
-		modelMock = 
-			handle: (@data) ->
+	it 'should publish data to subscribed model', =>
 		data = 
 			hi: 'test'
 
-		publisher.subcribeModelTo modelMock, 'test'
-		publisher.publishDataTo data, 'test'
+		@publisher.subscribeModelTo @modelMock, 'test'
+		@publisher.publishDataTo data, 'test'
 
-		expect(modelMock.handle).toHaveBeenCalledWith(data)
-
+		expect(@modelMock.handle).toHaveBeenCalledWith(data)
 			
 

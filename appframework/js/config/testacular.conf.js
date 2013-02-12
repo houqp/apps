@@ -34,21 +34,23 @@ files = [
 	'vendor/jquery-1.9.1/jquery-1.9.1.js',
 	'vendor/angular-1.0.4/angular.js',
 	'vendor/angular-1.0.4/angular-mocks.js',
-	'tests/mocks/owncloud.js',
-	'build/app.js',
-	'build/tests.js'
+	'tests/common/owncloud.js',
+	'tests/common/modules.js',
+	'build/app/directives/*.js',
+	'build/app/services/*.js',
+	'build/tests/**/*Spec.js'
 ];
 
 
 // list of files to exclude
 exclude = [
-	
 ];
 
 
 // test results reporter to use
 // possible values: 'dots', 'progress', 'junit'
-reporters = ['progress', 'junit'];
+//reporters = ['progress', 'junit'];
+reporters = ['progress'];
 
 junitReporter = {
 	outputFile: 'test-results.xml'
@@ -83,7 +85,7 @@ autoWatch = false;
 // - Safari (only Mac)
 // - PhantomJS
 // - IE (only Windows)
-browsers = ['Chrome'];
+browsers = ['Firefox'];
 
 
 // If browser does not capture in given timeout [ms], kill it

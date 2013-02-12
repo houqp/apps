@@ -8,12 +8,15 @@ deps:
 	npm install --deps
 
 watch: compile
-	export CHROME_BIN=$(chrome_bin) && export FIREFOX_BIN=$(firefox_bin) && \
-	$(CURDIR)/node_modules/.bin/grunt --config $(CURDIR)/Gruntfile.coffee testacular & \
 	$(CURDIR)/node_modules/.bin/grunt --config $(CURDIR)/Gruntfile.coffee run
 
+testacular:
+	export CHROME_BIN=$(chrome_bin) && export FIREFOX_BIN=$(firefox_bin) && \
+	$(CURDIR)/node_modules/.bin/grunt --config $(CURDIR)/Gruntfile.coffee testacular
+
 compile:
-	mkdir -p $(CURDIR)/build
+	mkdir -p $(CURDIR)/build/app
+	mkdir -p $(CURDIR)/build/tests
 	$(CURDIR)/node_modules/.bin/grunt --config $(CURDIR)/Gruntfile.coffee compile
 
 ci:
@@ -22,3 +25,4 @@ ci:
 
 clean:
 	rm -rf $(CURDIR)/build
+	rm -rf $(CURDIR)/test-results.xml

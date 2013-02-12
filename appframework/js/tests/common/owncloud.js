@@ -24,9 +24,9 @@
  * Contains mock objects for need OC objects
  */
 
-oc_requesttoken = "token";
+var oc_requesttoken = "token";
 
-OC = {
+var OC = {
 	Router:function(){
 		return null;
 	},

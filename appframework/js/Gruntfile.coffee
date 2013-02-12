@@ -55,7 +55,11 @@ module.exports = (grunt) ->
 					banner: '<%= meta.banner %>\n'
 					stripBanners: 
 						options: 'block'
-				src: '<%= meta.build %>app.js'
+				src: [
+						'<%= meta.build %>app/app.js'
+						'<%= meta.build %>app/directives/*.js'
+						'<%= meta.build %>app/services/*.js'
+					]
 				dest: '<%= meta.production %>app.js'
 		wrap:
 			app:
@@ -67,16 +71,19 @@ module.exports = (grunt) ->
 				]
 
 		coffee: 
-			compile:
-				files:
-					'<%= meta.build %>app.js': [
-						'app.coffee'
-						'services/*.coffee'
-						'directives/*.coffee'
-					]
-					'<%= meta.build %>tests.js': [
-						'tests/**/*.coffee'
-					]
+			app:
+				expand: true
+				cwd: 'app/'
+				src: ['**/*.coffee']
+				dest: '<%= meta.build %>app/'
+				ext: '.js'
+			unit:
+				expand: true
+				cwd: 'tests/'
+				src: ['**/*.coffee']
+				dest: '<%= meta.build %>tests/'
+				ext: '.js'				
+
 		coffeelint:
 			app: [
 				'app.coffee'
@@ -93,10 +100,17 @@ module.exports = (grunt) ->
 
 		watch: 
 			app: 
-				files: './**/*.coffee'
+				files: [
+					'app/**/*.coffee'
+					'tests/directives/*.coffee'
+					'tests/services/*.coffee'
+				]
 				tasks: 'compile'
 			testacular:
-				files: '<%= meta.build %>tests.js'
+				files: [
+					'<%= meta.build %>app/**/*.js'
+					'<%= meta.build %>tests/**/*.js'
+				]
 				tasks: 'testacular:unit:run'
 
 		testacular: 
