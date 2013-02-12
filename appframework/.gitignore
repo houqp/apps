@@ -3,3 +3,4 @@ structure.xml
 coffee/build/
 node_modules/
 *.log
+test-results.xml

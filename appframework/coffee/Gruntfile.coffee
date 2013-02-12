@@ -27,6 +27,7 @@ module.exports = (grunt) ->
 	grunt.loadNpmTasks('grunt-contrib-concat')
 	grunt.loadNpmTasks('grunt-contrib-watch')
 	grunt.loadNpmTasks('grunt-coffeelint')
+	grunt.loadNpmTasks('grunt-wrap');
 	grunt.loadNpmTasks('gruntacular');
 
 	grunt.initConfig
@@ -44,8 +45,6 @@ module.exports = (grunt) ->
 				' * See the COPYING-README file\n' +
 				' *\n' + 
 				' */'
-			prefix: '(function(angular, $, OC, oc_requesttoken){'
-			suffix: '})(window.angular, jQuery, OC, oc_requesttoken);'
 			build: 'build/'
 			production: '../js/'
 
@@ -53,8 +52,19 @@ module.exports = (grunt) ->
 			app: 
 				options:
 					banner: '<%= meta.banner %>\n'
+					stripBanners: 
+						options: 'block'
 				src: '<%= meta.build %>app.js'
 				dest: '<%= meta.production %>app.js'
+		wrap:
+			app:
+				src: '<%= meta.build %>app.js'
+				dest: ''
+				wrapper: [
+					'(function(angular, $, OC, oc_requesttoken){'
+					'})(window.angular, jQuery, OC, oc_requesttoken);'
+				]
+
 		coffee: 
 			compile:
 				files:
@@ -62,6 +72,9 @@ module.exports = (grunt) ->
 						'app.coffee'
 						'services/*.coffee'
 						'directives/*.coffee'
+					]
+					'<%= meta.build %>tests.js': [
+						'tests/**/*.coffee'
 					]
 		coffeelint:
 			app: [
@@ -77,8 +90,19 @@ module.exports = (grunt) ->
 
 		watch: 
 			app: 
-				files: './**/*.coffee',
+				files: './**/*.coffee'
 				tasks: 'compile'
+			testacular:
+				files: '<%= meta.build %>tests.js'
+				tasks: 'testacular:unit:run'
+
+		testacular: 
+			unit: 
+				configFile: 'testacular.conf.js'
+			continuous:
+				configFile: 'testacular.conf.js'
+				singleRun: true
+				browsers: ['PhantomJS']
 
 
 	grunt.registerTask('run', ['watch'])
@@ -86,6 +110,13 @@ module.exports = (grunt) ->
 	grunt.registerTask('compile', [
 			#'coffeelint'
 			'coffee'
+			'wrap'
 			'concat:app'
-			]
+		]
+	)
+
+	grunt.registerTask('ci', [
+			'coffee'
+			'testacular:continuous'
+		]
 	)
