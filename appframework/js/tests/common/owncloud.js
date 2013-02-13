@@ -30,7 +30,7 @@ var OC = {
 	Router:function(){
 		return null;
 	},
-	Navigation:function(){
+	Notification:function(){
 		return null;
 	}
 };

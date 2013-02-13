@@ -24,4 +24,4 @@
  * Contains all modules that we are going to use
  */
 
-angular.module('OC', []);
+angular.module('OC', ['ngMock']);
