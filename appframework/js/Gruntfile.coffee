@@ -120,6 +120,9 @@ module.exports = (grunt) ->
 				configFile: 'config/testacular.conf.js'
 				singleRun: true
 				browsers: ['PhantomJS']
+				reporters: ['progress', 'junit']
+				junitReporter:
+					outputFile: 'test-results.xml'
 
 
 	grunt.registerTask('run', ['watch'])
