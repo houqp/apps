@@ -104,6 +104,8 @@ module.exports = (grunt) ->
 					'app/**/*.coffee'
 					'tests/directives/*.coffee'
 					'tests/services/*.coffee'
+					'tests/controllers/*.coffee'
+					'tests/filters/*.coffee'
 				]
 				tasks: 'compile'
 			testacular:
