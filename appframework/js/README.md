@@ -18,7 +18,7 @@ If you want to autocompile on change run:
 ## Running unittests
 Unittests are run with the testacular:
 
-	make testacular
+	make test
 
 afterwards the watch command can be run in a new terminal:
 

@@ -99,7 +99,29 @@ module.exports = (grunt) ->
 				'level': 'warn'
 
 		watch: 
-			app: 
+			## Use later when watch can finally update single files
+			#app: 
+			#	files: [
+			#		'app/**/*.coffee'
+			#		'tests/directives/*.coffee'
+			#		'tests/services/*.coffee'
+			#		'tests/controllers/*.coffee'
+			#		'tests/filters/*.coffee'
+			#	]
+			#	tasks: 'compile'
+			#testacular:
+			#	files: [
+			#		'<%= meta.build %>app/**/*.js'
+			#		'<%= meta.build %>tests/**/*.js'
+			#	]
+			#	tasks: ['testacular:unit:run', 'concat']
+			concat:
+				files: [
+					'<%= meta.build %>app/**/*.js'
+					'<%= meta.build %>tests/**/*.js'
+				]
+				tasks: 'concat'		
+			lint: 
 				files: [
 					'app/**/*.coffee'
 					'tests/directives/*.coffee'
@@ -107,13 +129,7 @@ module.exports = (grunt) ->
 					'tests/controllers/*.coffee'
 					'tests/filters/*.coffee'
 				]
-				tasks: 'compile'
-			testacular:
-				files: [
-					'<%= meta.build %>app/**/*.js'
-					'<%= meta.build %>tests/**/*.js'
-				]
-				tasks: 'testacular:unit:run'
+				tasks: 'coffeelint'
 
 		testacular: 
 			unit: 
@@ -128,17 +144,13 @@ module.exports = (grunt) ->
 
 
 	grunt.registerTask('run', ['watch'])
-	grunt.registerTask('lint', ['coffeelint'])
 	grunt.registerTask('compile', [
-			'coffeelint'
-			'coffee'
 			'concat:app'
 			'wrap'
 		]
 	)
 
 	grunt.registerTask('ci', [
-			'coffee'
 			'testacular:continuous'
 		]
 	)
