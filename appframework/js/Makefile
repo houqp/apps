@@ -1,5 +1,6 @@
 firefox_bin=/usr/bin/firefox
 chrome_bin=/usr/bin/chromium
+coffee=$(CURDIR)/node_modules/coffee-script/bin/coffee
 
 all: compile
 
@@ -8,8 +9,8 @@ deps:
 	npm install --deps
 
 watch: compile
-	coffee --compile --watch --output $(CURDIR)/build/app app/ & \
-	coffee --compile --watch --output $(CURDIR)/build/tests tests/ & \
+	$(coffee) --compile --watch --output $(CURDIR)/build/app app/ & \
+	$(coffee) --compile --watch --output $(CURDIR)/build/tests tests/ & \
 	$(CURDIR)/node_modules/.bin/grunt --config $(CURDIR)/Gruntfile.coffee run
 
 test:
@@ -19,8 +20,8 @@ test:
 compile:
 	mkdir -p $(CURDIR)/build/app
 	mkdir -p $(CURDIR)/build/tests
-	coffee --compile --output $(CURDIR)/build/app app/
-	coffee --compile --output $(CURDIR)/build/tests tests/
+	$(coffee) --compile --output $(CURDIR)/build/app app/
+	$(coffee) --compile --output $(CURDIR)/build/tests tests/
 	$(CURDIR)/node_modules/.bin/grunt --config $(CURDIR)/Gruntfile.coffee compile
 
 ci: compile
