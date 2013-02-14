@@ -32,7 +32,7 @@ angular.module('OC').directive 'ocClickSlideToggle',
 	return (scope, elm, attr) ->
 		options = scope.$eval(attr.clickSlideToggle)
 
-		if angular.isDefined(options.selector)
+		if angular.isDefined(options) and angular.isDefined(options.selector)
 			slideArea = $(options.selector)
 		else
 			slideArea = elm
@@ -45,22 +45,23 @@ angular.module('OC').directive 'ocClickSlideToggle',
 
 		# if focus lost is set use broadcast to be sure that the currently
 		# active element doesnt get slid up
-		if angular.isDefined(options.hideOnFocusLost) and
+		if angular.isDefined(options) and 
+		angular.isDefined(options.hideOnFocusLost) and
 		options.hideOnFocusLost
 			$(document.body).click ->
-				$rootScope.$broadcast 'oCLostFocus'
+				$rootScope.$broadcast 'ocLostFocus'
 
-			$rootScope.$on 'oCLostFocus', (scope, params) ->
+			$rootScope.$on 'ocLostFocus', (scope, params) ->
 				if params != slideArea
 					if slideArea.is(':visible') and not slideArea.is(':animated')
 						slideArea.slideUp()
 
 			slideArea.click (e) ->
-				$rootScope.$broadcast 'oCLostFocus', slideArea
+				$rootScope.$broadcast 'ocLostFocus', slideArea
 				e.stopPropagation()
 
 			elm.click (e) ->
-				$rootScope.$broadcast 'oCLostFocus', slideArea
+				$rootScope.$broadcast 'ocLostFocus', slideArea
 				e.stopPropagation()
 
 ]

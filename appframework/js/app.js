@@ -95,7 +95,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
       return function(scope, elm, attr) {
         var options, slideArea;
         options = scope.$eval(attr.clickSlideToggle);
-        if (angular.isDefined(options.selector)) {
+        if (angular.isDefined(options) && angular.isDefined(options.selector)) {
           slideArea = $(options.selector);
         } else {
           slideArea = elm;
@@ -107,11 +107,11 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
             return slideArea.slideDown();
           }
         });
-        if (angular.isDefined(options.hideOnFocusLost) && options.hideOnFocusLost) {
+        if (angular.isDefined(options) && angular.isDefined(options.hideOnFocusLost) && options.hideOnFocusLost) {
           $(document.body).click(function() {
-            return $rootScope.$broadcast('oCLostFocus');
+            return $rootScope.$broadcast('ocLostFocus');
           });
-          $rootScope.$on('oCLostFocus', function(scope, params) {
+          $rootScope.$on('ocLostFocus', function(scope, params) {
             if (params !== slideArea) {
               if (slideArea.is(':visible') && !slideArea.is(':animated')) {
                 return slideArea.slideUp();
@@ -119,11 +119,11 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
             }
           });
           slideArea.click(function(e) {
-            $rootScope.$broadcast('oCLostFocus', slideArea);
+            $rootScope.$broadcast('ocLostFocus', slideArea);
             return e.stopPropagation();
           });
           return elm.click(function(e) {
-            $rootScope.$broadcast('oCLostFocus', slideArea);
+            $rootScope.$broadcast('ocLostFocus', slideArea);
             return e.stopPropagation();
           });
         }
@@ -202,9 +202,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
   angular.module('OC').directive('ocForwardClick', function() {
     return function(scope, elm, attr) {
       var options;
-      options = scope.$eval(attr.forwardClick);
-      if (angular.isDefined(options.selector)) {
-        return elm.click(function() {
+      options = scope.$eval(attr.ocForwardClick);
+      if (angular.isDefined(options) && angular.isDefined(options.selector)) {
+        return $(elm).click(function() {
           return $(options.selector).trigger('click');
         });
       }

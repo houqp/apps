@@ -39,7 +39,6 @@ files = [
 	'tests/common/modules.js',
 	'build/app/directives/*.js',
 	'build/app/filters/*.js',
-	'build/app/controllers/*.js',
 	'build/app/services/*.js',
 	'build/tests/**/*Spec.js'
 ];

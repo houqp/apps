@@ -23,11 +23,13 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 # Used to forward clicks to another element via jquery selector
 # The expression which can be passed looks like this {selector:'#opml-upload'}
+# The element where to which the click was fowarded must not be a child element
+# otherwise this will end in endless recursion
 angular.module('OC').directive 'ocForwardClick', ->
 
 	return (scope, elm, attr) ->
-		options = scope.$eval(attr.forwardClick)
+		options = scope.$eval(attr.ocForwardClick)
 
-		if angular.isDefined(options.selector)
-			elm.click ->
+		if angular.isDefined(options) and angular.isDefined(options.selector)
+			$(elm).click ->
 				$(options.selector).trigger('click')
