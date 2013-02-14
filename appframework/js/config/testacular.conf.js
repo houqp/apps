@@ -32,6 +32,7 @@ files = [
 	JASMINE,
 	JASMINE_ADAPTER,
 	'vendor/jquery-1.9.1/jquery-1.9.1.js',
+	'vendor/jquery-ui-1.10.0/jquery-ui-1.10.0.custom.js',
 	'vendor/angular-1.0.4/angular.js',
 	'vendor/angular-1.0.4/angular-mocks.js',
 	'tests/common/owncloud.js',

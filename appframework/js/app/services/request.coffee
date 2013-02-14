@@ -29,7 +29,7 @@ angular.module('OC').factory '_Request', ->
 			@_initialized = false
 			@_shelvedRequests = []
 
-			@_$rootScope.$on 'oCRoutesLoaded', =>
+			@_$rootScope.$on 'ocRoutesLoaded', =>
 				@_executeShelvedRequests()
 				@_initialized = true
 				@_shelvedRequests = []
