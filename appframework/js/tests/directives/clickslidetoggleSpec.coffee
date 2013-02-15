@@ -30,6 +30,7 @@ describe 'ocClickSlideToggle', ->
 		@$compile = $compile
 		@host = $('<div id="host"></div>')
 		$('body').append(@host)
+		$.fx.off = true
 
 
 	@setOptions = (options) =>
@@ -57,30 +58,33 @@ describe 'ocClickSlideToggle', ->
 		@setOptions({})
 		expect(@elm.find('#a').is(':visible')).toBe(false)
 		expect(@elm.find('#b').is(':visible')).toBe(false)
+		expect(@elm.find('#c').is(':visible')).toBe(false)
 
 
 	it 'should slide up div on click', =>
-		# FIXME: run async
-		options = 
-			callback: =>
-				expect(@elm.find('#a').is(':visible')).toBe(true)
-		
-		@setOptions(options)
-		@elm.find('#a').trigger 'click'
+		@setOptions({})
+		a = @elm.find('#a')
+		a.trigger 'click'
+
+		expect(a.is(':visible')).toBe(true)
+
 
 
 	it 'should slide up other element if selector is passed', =>
 		# FIXME: run async
 		options = 
 			selector: '#b'
-			callback: =>
-				expect(@elm.find('#b').is(':visible')).toBe(true)
 
 		@setOptions(options)
-		@elm.find('#a').trigger 'click'
+
+		a = @elm.find('#a')
+		b = @elm.find('#b')
+		
+		a.trigger 'click'
+		expect(b.is(':visible')).toBe(true)
 
 
-	it 'should hide div when other div was clicked', =>
+	xit 'should hide div when other div was clicked', =>
 		# FIXME: run async
 		options = 
 			selector: '#b'
@@ -92,7 +96,7 @@ describe 'ocClickSlideToggle', ->
 		@elm.find('#a').trigger 'click'
 
 
-	it 'should not hide current slid up element on click but others', =>
+	xit 'should not hide current slid up element on click but others', =>
 		# FIXME: run async
 		called = 0
 		callback = =>

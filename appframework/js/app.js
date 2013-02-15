@@ -93,23 +93,19 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
   angular.module('OC').directive('ocClickSlideToggle', [
     '$rootScope', function($rootScope) {
       return function(scope, elm, attr) {
-        var callback, options, slideArea;
-        options = scope.$eval(attr.clickSlideToggle);
-        if (angular.isDefined(options) && angular.isDefined(options.callback)) {
-          callback = options.callback;
-        } else {
-          callback = angular.noop;
-        }
+        var options, slideArea;
+        options = scope.$eval(attr.ocClickSlideToggle);
         if (angular.isDefined(options) && angular.isDefined(options.selector)) {
           slideArea = $(options.selector);
         } else {
           slideArea = elm;
         }
+        console.log(options.selector);
         elm.click(function() {
           if (slideArea.is(':visible') && !slideArea.is(':animated')) {
             return slideArea.slideUp();
           } else {
-            return slideArea.slideDown(callback);
+            return slideArea.slideDown();
           }
         });
         if (angular.isDefined(options) && angular.isDefined(options.hideOnFocusLost) && options.hideOnFocusLost) {
