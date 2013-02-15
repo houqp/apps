@@ -43,6 +43,7 @@ describe 'ocClickSlideToggle', ->
 				'<div style="display: none;" id="a" ' + 
 				'oc-click-slide-toggle="' + optionsString + '"></div>' +
 				'<div style="display: none;" id="b"></div>' +
+				'<div style="display: none;" id="c"></div>' +
 			'</div>'
 
 		@elm = angular.element(elm)
@@ -52,13 +53,14 @@ describe 'ocClickSlideToggle', ->
 		@host.append(@elm)
 
 
-	it 'div should not be visible', =>
+	it 'should not show div hidden divs', =>
 		@setOptions({})
 		expect(@elm.find('#a').is(':visible')).toBe(false)
 		expect(@elm.find('#b').is(':visible')).toBe(false)
 
 
-	it 'click on div should slide it up', =>
+	it 'should slide up div on click', =>
+		# FIXME: run async
 		options = 
 			callback: =>
 				expect(@elm.find('#a').is(':visible')).toBe(true)
@@ -67,15 +69,55 @@ describe 'ocClickSlideToggle', ->
 		@elm.find('#a').trigger 'click'
 
 
-	it 'click on div should slide it up other element if selector is passed', =>
+	it 'should slide up other element if selector is passed', =>
+		# FIXME: run async
 		options = 
 			selector: '#b'
 			callback: =>
-				expect(@elm.find('#b').is(':visible')).toBe(true)	
+				expect(@elm.find('#b').is(':visible')).toBe(true)
 
 		@setOptions(options)
 		@elm.find('#a').trigger 'click'
-			
+
+
+	it 'should hide div when other div was clicked', =>
+		# FIXME: run async
+		options = 
+			selector: '#b'
+			callback: =>
+				@elm.find('#c').trigger 'click'
+				expect(@elm.find('#a').is(':animated')).toBe(true)
+
+		@setOptions(options)
+		@elm.find('#a').trigger 'click'
+
+
+	it 'should not hide current slid up element on click but others', =>
+		# FIXME: run async
+		called = 0
+		callback = =>
+			if called == 2
+				@elm.find('#c').trigger 'click'
+				expect(@elm.find('#b').is(':animated')).toBe(true)
+				expect(@elm.find('#c').is(':animated')).toBe(false)
+			else
+				called += 1
+
+		options = 
+			selector: '#b'
+			callback: =>
+				callback()
+		@setOptions(options)
+
+		options = 
+			selector: '#c'
+			callback: =>
+				callback()
+		@setOptions(options)
+
+		@elm.find('#a').trigger 'click'
+
+
 
 
 	afterEach =>
