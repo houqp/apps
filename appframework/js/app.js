@@ -1,5 +1,3 @@
-(function(angular, $, OC, oc_requesttoken){
-
 /**
  * ownCloud App Framework - v0.0.1
  *
@@ -250,7 +248,17 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
         this.dataMap = {};
       }
 
+      Model.prototype.handle = function(data) {
+        /*
+        			Redirects to add method
+        */
+        return this.add(data);
+      };
+
       Model.prototype.add = function(data) {
+        /*
+        			Adds a new entry or updates an entry if the id exists already
+        */
         if (angular.isDefined(this.dataMap[data.id])) {
           return this.update(data);
         } else {
@@ -260,37 +268,43 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
       };
 
       Model.prototype.update = function(data) {
-        var entry, key, value, _i, _len, _ref, _results;
-        _ref = this.data;
+        /*
+        			Update an entry by searching for its id
+        */
+
+        var entry, key, value, _results;
+        entry = this.getById(data.id);
         _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          entry = _ref[_i];
-          if (entry.id === data.id) {
-            _results.push((function() {
-              var _results1;
-              _results1 = [];
-              for (key in data) {
-                value = data[key];
-                if (key === 'id') {
-                  continue;
-                } else {
-                  _results1.push(entry[key] = value);
-                }
-              }
-              return _results1;
-            })());
+        for (key in data) {
+          value = data[key];
+          if (key === 'id') {
+            continue;
           } else {
-            _results.push(void 0);
+            _results.push(entry[key] = value);
           }
         }
         return _results;
       };
 
       Model.prototype.getById = function(id) {
+        /*
+        			Return an entry by its id
+        */
         return this.dataMap[id];
       };
 
+      Model.prototype.getAll = function() {
+        /*
+        			Returns all stored entries
+        */
+        return this.data;
+      };
+
       Model.prototype.removeById = function(id) {
+        /*
+        			Remove an entry by id
+        */
+
         var counter, entry, _i, _len, _ref, _results;
         _ref = this.data;
         _results = [];
@@ -307,7 +321,15 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
         return _results;
       };
 
+      Model.prototype.clear = function() {
+        this.data.length = 0;
+        return this.dataMap = {};
+      };
+
       Model.prototype.size = function() {
+        /*
+        			Return the number of all stored entries
+        */
         return this.data.length;
       };
 
@@ -569,5 +591,3 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
   });
 
 }).call(this);
-
-})(window.angular, jQuery, OC, oc_requesttoken);

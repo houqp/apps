@@ -91,7 +91,33 @@ describe '_Model', ->
 
 		expect(@model.getById(2)).toBe(undefined)
 
+
 	it 'should remove element when entry is removed', =>
 		@model.removeById(1)
 
 		expect(@model.getById(1)).toBe(undefined)
+
+
+	it 'should call add when handle is called', =>
+		data = 
+			id: 10
+			name: 'bruce'
+
+		@model.handle(data)
+
+		expect(@model.getById(10)).toBe(data)
+
+
+	it 'should return all entries on getAll', =>
+
+		expect(@model.getAll()).toContain(@data1)
+		expect(@model.getAll()).toContain(@data2)
+		expect(@model.getAll().length).toBe(2)
+
+
+	it 'should clear the data on clear', =>
+		@model.clear()
+
+		expect(@model.size()).toBe(0)
+		expect(@model.getById(1)).toBe(undefined)
+		expect(@model.getById(2)).toBe(undefined)

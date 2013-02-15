@@ -20,6 +20,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 ###
 
+
+# Model which offers basic crud for storing your data
 angular.module('OC').factory '_Model', ->
 
 	class Model
@@ -29,7 +31,17 @@ angular.module('OC').factory '_Model', ->
 			@dataMap = {}
 
 
+		handle: (data) ->
+			###
+			Redirects to add method
+			###
+			@add(data)
+
+
 		add: (data) ->
+			###
+			Adds a new entry or updates an entry if the id exists already
+			###
 			if angular.isDefined(@dataMap[data.id])
 				@update(data)
 			else
@@ -38,20 +50,35 @@ angular.module('OC').factory '_Model', ->
 
 
 		update: (data) ->
-			for entry in @data
-				if entry.id == data.id
-					for key, value of data
-						if key == 'id'
-							continue
-						else
-							entry[key] = value
+			###
+			Update an entry by searching for its id
+			###
+			entry = @getById(data.id)
+			for key, value of data
+				if key == 'id'
+					continue
+				else
+					entry[key] = value
 
 
 		getById: (id) ->
+			###
+			Return an entry by its id
+			###
 			return @dataMap[id]
 
 
+		getAll: ->
+			###
+			Returns all stored entries
+			###
+			return @data
+
+
 		removeById: (id) ->
+			###
+			Remove an entry by id
+			###
 			for entry, counter in @data
 				if entry.id == id
 					@data.splice(counter, 1)
@@ -59,8 +86,15 @@ angular.module('OC').factory '_Model', ->
 					break
 
 
+		clear: ->
+			@data.length = 0
+			@dataMap = {}
+
 
 		size: ->
+			###
+			Return the number of all stored entries
+			###
 			return @data.length
 
 
