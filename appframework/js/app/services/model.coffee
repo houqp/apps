@@ -52,13 +52,11 @@ angular.module('OC').factory '_Model', ->
 
 
 		removeById: (id) ->
-			counter = 0
-			for entry in @data
+			for entry, counter in @data
 				if entry.id == id
 					@data.splice(counter, 1)
-					delete @data[id]
+					delete @dataMap[id]
 					break
-				counter += 1
 
 
 

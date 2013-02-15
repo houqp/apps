@@ -84,3 +84,14 @@ describe '_Model', ->
 		@model.removeById(1)
 
 		expect(@model.size()).toBe(1)
+
+
+	it 'should remove element when entry is removed', =>
+		@model.removeById(2)
+
+		expect(@model.getById(2)).toBe(undefined)
+
+	it 'should remove element when entry is removed', =>
+		@model.removeById(1)
+
+		expect(@model.getById(1)).toBe(undefined)

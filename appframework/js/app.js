@@ -290,17 +290,17 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
       Model.prototype.removeById = function(id) {
         var counter, entry, _i, _len, _ref, _results;
-        counter = 0;
         _ref = this.data;
         _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          entry = _ref[_i];
+        for (counter = _i = 0, _len = _ref.length; _i < _len; counter = ++_i) {
+          entry = _ref[counter];
           if (entry.id === id) {
-            this.data.splice(counter, 1);
-            delete this.data[id];
+            this.data.splice(counter - 1, 1);
+            delete this.dataMap[id];
             break;
+          } else {
+            _results.push(void 0);
           }
-          _results.push(counter += 1);
         }
         return _results;
       };
