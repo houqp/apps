@@ -28,6 +28,8 @@ describe 'ocForwardClick', ->
 	beforeEach inject ($rootScope, $compile) =>
 		@$rootScope = $rootScope
 		@$compile = $compile
+		@host = $('<div id="host"></div>')
+		$('body').append(@host)
 
 
 	@setOptions = (options) =>
@@ -47,19 +49,23 @@ describe 'ocForwardClick', ->
 		scope = @$rootScope
 		@$compile(@elm)(scope)
 		scope.$digest()
+		@host.append(@elm)
 
 
 	it 'should not forward clicks if no selector is given', =>
 		options = {}
 		@setOptions(options)
-		$(@elm).find('#a').trigger('click')
-		expect($(@elm).find('#b').val()).toBe('not-clicked')
+		@elm.find('#a').trigger('click')
+		expect(@elm.find('#b').val()).toBe('not-clicked')
 
 
-	xit 'should forward click to item if selector is given', =>
-		# FIXME
+	it 'should forward click to item if selector is given', =>
 		options = 
 			selector: '#b'
 		@setOptions(options)
-		$(@elm).find('#a').trigger('click')
-		expect($(@elm).find('#b').val()).toBe('clicked')
+		@elm.find('#a').trigger('click')
+		expect(@elm.find('#b').val()).toBe('clicked')
+
+
+	afterEach =>
+		@host.remove()

@@ -1,5 +1,3 @@
-(function(angular, $, OC, oc_requesttoken){
-
 /**
  * ownCloud App Framework - v0.0.1
  *
@@ -95,8 +93,13 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
   angular.module('OC').directive('ocClickSlideToggle', [
     '$rootScope', function($rootScope) {
       return function(scope, elm, attr) {
-        var options, slideArea;
+        var callback, options, slideArea;
         options = scope.$eval(attr.clickSlideToggle);
+        if (angular.isDefined(options) && angular.isDefined(options.callback)) {
+          callback = options.callback;
+        } else {
+          callback = angular.noop;
+        }
         if (angular.isDefined(options) && angular.isDefined(options.selector)) {
           slideArea = $(options.selector);
         } else {
@@ -106,7 +109,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
           if (slideArea.is(':visible') && !slideArea.is(':animated')) {
             return slideArea.slideUp();
           } else {
-            return slideArea.slideDown();
+            return slideArea.slideDown(callback);
           }
         });
         if (angular.isDefined(options) && angular.isDefined(options.hideOnFocusLost) && options.hideOnFocusLost) {
@@ -465,5 +468,3 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
   });
 
 }).call(this);
-
-})(window.angular, jQuery, OC, oc_requesttoken);

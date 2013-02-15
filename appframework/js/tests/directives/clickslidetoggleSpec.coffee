@@ -25,10 +25,11 @@ describe 'ocClickSlideToggle', ->
 	beforeEach module 'OC'
 
 
-	beforeEach inject ($rootScope, $compile, $window) =>
+	beforeEach inject ($rootScope, $compile) =>
 		@$rootScope = $rootScope
 		@$compile = $compile
-		@$window = $window
+		@host = $('<div id="host"></div>')
+		$('body').append(@host)
 
 
 	@setOptions = (options) =>
@@ -39,20 +40,43 @@ describe 'ocClickSlideToggle', ->
 			optionsString = ""
 
 		elm = '<div>' +
-				'<div style="display: block;" ' +
-				'id="a" oc-click-slide-toggle="' + optionsString + '"></div>' +
+				'<div style="display: none;" id="a" ' + 
+				'oc-click-slide-toggle="' + optionsString + '"></div>' +
+				'<div style="display: none;" id="b"></div>' +
 			'</div>'
+
 		@elm = angular.element(elm)
 		scope = @$rootScope
 		@$compile(@elm)(scope)
 		scope.$digest()
+		@host.append(@elm)
+
 
 	it 'div should not be visible', =>
 		@setOptions({})
-		expect(@elm.find('#a').is(':visible')).toBe(true)
+		expect(@elm.find('#a').is(':visible')).toBe(false)
+		expect(@elm.find('#b').is(':visible')).toBe(false)
 
-	xit 'click on div should slide it up', =>
-		@setOptions({})
-		@elm.trigger 'click', =>
-		expect(@elm.find('#a').css('display')).toBe('block')
 
+	it 'click on div should slide it up', =>
+		options = 
+			callback: =>
+				expect(@elm.find('#a').is(':visible')).toBe(true)
+		
+		@setOptions(options)
+		@elm.find('#a').trigger 'click'
+
+
+	it 'click on div should slide it up other element if selector is passed', =>
+		options = 
+			selector: '#b'
+			callback: =>
+				expect(@elm.find('#b').is(':visible')).toBe(true)	
+
+		@setOptions(options)
+		@elm.find('#a').trigger 'click'
+			
+
+
+	afterEach =>
+		@host.remove()

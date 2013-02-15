@@ -25,6 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 # Used to slide up an area and can be customized by passing an expression.
 # If selector is defined, a different area is slid up on click
 # If hideOnFocusLost is defined, the slid up area will hide when the focus is
+# If callback is defined, a callback will be run after the slideDown was finished
 # lost
 angular.module('OC').directive 'ocClickSlideToggle',
 ['$rootScope', ($rootScope) ->
@@ -32,6 +33,13 @@ angular.module('OC').directive 'ocClickSlideToggle',
 	return (scope, elm, attr) ->
 		options = scope.$eval(attr.clickSlideToggle)
 
+		# get callback
+		if angular.isDefined(options) and angular.isDefined(options.callback)
+			callback = options.callback
+		else
+			callback = angular.noop
+
+		# get selected slide area
 		if angular.isDefined(options) and angular.isDefined(options.selector)
 			slideArea = $(options.selector)
 		else
@@ -41,7 +49,7 @@ angular.module('OC').directive 'ocClickSlideToggle',
 			if slideArea.is(':visible') and not slideArea.is(':animated')
 				slideArea.slideUp()
 			else
-				slideArea.slideDown()
+				slideArea.slideDown(callback)
 
 		# if focus lost is set use broadcast to be sure that the currently
 		# active element doesnt get slid up
