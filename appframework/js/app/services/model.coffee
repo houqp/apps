@@ -20,14 +20,50 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 ###
 
-describe '_Request', ->
+angular.module('OC').factory '_Model', ->
 
-	beforeEach module 'OC'
+	class Model
 
-	beforeEach inject (_Request, $httpBackend) =>
-			@request = _Request
-			@http = $httpBackend
+		constructor: ->
+			@data = []
+			@dataMap = {}
 
 
-	it 'test', ->
-		# TBD
+		add: (data) ->
+			if angular.isDefined(@dataMap[data.id])
+				@update(data)
+			else
+				@data.push(data)
+				@dataMap[data.id] = data
+
+
+		update: (data) ->
+			for entry in @data
+				if entry.id == data.id
+					for key, value of data
+						if key == 'id'
+							continue
+						else
+							entry[key] = value
+
+
+		getById: (id) ->
+			return @dataMap[id]
+
+
+		removeById: (id) ->
+			counter = 0
+			for entry in @data
+				if entry.id == id
+					@data.splice(counter, 1)
+					delete @data[id]
+					break
+				counter += 1
+
+
+
+		size: ->
+			return @data.length
+
+
+	return Model
