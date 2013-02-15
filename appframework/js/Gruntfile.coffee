@@ -131,7 +131,7 @@ module.exports = (grunt) ->
 				]
 				tasks: 'coffeelint'
 			phpunit:
-				files: '../tests/**/*.php'
+				files: '../**/*.php'
 				tasks: 'phpunit'
 
 		

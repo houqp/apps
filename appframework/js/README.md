@@ -26,6 +26,11 @@ afterwards the watch command can be run in a new terminal:
 
 This will automatically execute unittests when a coffeescript file has been changed and saved.
 
+### PHPUnit
+To run phpunittests once a file changed, simply run
+
+    make phpunit
+
 ## Clear compiled folder
 To clear the build/ folder run:
 
