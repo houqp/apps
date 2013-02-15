@@ -28,6 +28,7 @@ module.exports = (grunt) ->
 	grunt.loadNpmTasks('grunt-contrib-watch')
 	grunt.loadNpmTasks('grunt-coffeelint')
 	grunt.loadNpmTasks('grunt-wrap');
+	grunt.loadNpmTasks('grunt-phpunit');
 	grunt.loadNpmTasks('gruntacular');
 
 	grunt.initConfig
@@ -129,7 +130,11 @@ module.exports = (grunt) ->
 					'tests/filters/*.coffee'
 				]
 				tasks: 'coffeelint'
+			phpunit:
+				files: '../tests/**/*.php'
+				tasks: 'phpunit'
 
+		
 		testacular: 
 			unit: 
 				configFile: 'config/testacular.conf.js'
@@ -140,6 +145,13 @@ module.exports = (grunt) ->
 				reporters: ['progress', 'junit']
 				junitReporter:
 					outputFile: 'test-results.xml'
+
+
+		phpunit:
+			classes:
+				dir: '../tests'
+			options:
+				colors: true
 
 
 	grunt.registerTask('run', ['watch'])
@@ -153,3 +165,5 @@ module.exports = (grunt) ->
 			'testacular:continuous'
 		]
 	)
+
+	grunt.registerTask('testphp', ['watch:phpunit'])

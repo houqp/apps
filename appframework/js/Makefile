@@ -7,23 +7,27 @@ phantomjs=$(CURDIR)/node_modules/phantomjs/bin/phantomjs
 all: compile
 
 deps:
-	cd $(CURDIR)
+	cd $(CURDIR)/
 	npm install --deps
+	cd ..
 
 watch: compile
-	$(coffee) --compile --watch --output $(CURDIR)/build/app app/ & \
-	$(coffee) --compile --watch --output $(CURDIR)/build/tests tests/ & \
+	$(coffee) --compile --watch --output $(CURDIR)/build/app $(CURDIR)/app/ & \
+	$(coffee) --compile --watch --output $(CURDIR)/build/tests $(CURDIR)/tests/ & \
 	$(grunt) --config $(CURDIR)/Gruntfile.coffee run
 
 test:
 	export CHROME_BIN=$(chrome_bin) && export FIREFOX_BIN=$(firefox_bin) && \
 	$(grunt) --config $(CURDIR)/Gruntfile.coffee testacular
 
+phpunit:
+	$(grunt) --config $(CURDIR)/Gruntfile.coffee testphp	
+
 compile:
 	mkdir -p $(CURDIR)/build/app
 	mkdir -p $(CURDIR)/build/tests
-	$(coffee) --compile --output $(CURDIR)/build/app app/
-	$(coffee) --compile --output $(CURDIR)/build/tests tests/
+	$(coffee) --compile --output $(CURDIR)/build/app $(CURDIR)/app/
+	$(coffee) --compile --output $(CURDIR)/build/tests $(CURDIR)/tests/
 	$(grunt) --config $(CURDIR)/Gruntfile.coffee compile
 
 ci: compile

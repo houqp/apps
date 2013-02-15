@@ -1,3 +1,5 @@
+(function(angular, $, OC, oc_requesttoken){
+
 /**
  * ownCloud App Framework - v0.0.1
  *
@@ -295,7 +297,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
         for (counter = _i = 0, _len = _ref.length; _i < _len; counter = ++_i) {
           entry = _ref[counter];
           if (entry.id === id) {
-            this.data.splice(counter - 1, 1);
+            this.data.splice(counter, 1);
             delete this.dataMap[id];
             break;
           } else {
@@ -567,3 +569,5 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
   });
 
 }).call(this);
+
+})(window.angular, jQuery, OC, oc_requesttoken);
