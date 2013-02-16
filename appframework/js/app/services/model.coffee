@@ -29,6 +29,7 @@ angular.module('OC').factory '_Model', ->
 		constructor: ->
 			@data = []
 			@dataMap = {}
+			@filterCache = {}
 
 
 		handle: (data) ->
@@ -42,6 +43,7 @@ angular.module('OC').factory '_Model', ->
 			###
 			Adds a new entry or updates an entry if the id exists already
 			###
+			@_invalidateCache()
 			if angular.isDefined(@dataMap[data.id])
 				@update(data)
 			else
@@ -53,6 +55,7 @@ angular.module('OC').factory '_Model', ->
 			###
 			Update an entry by searching for its id
 			###
+			@_invalidateCache()
 			entry = @getById(data.id)
 			for key, value of data
 				if key == 'id'
@@ -83,13 +86,28 @@ angular.module('OC').factory '_Model', ->
 				if entry.id == id
 					@data.splice(counter, 1)
 					delete @dataMap[id]
+					@_invalidateCache()
 					break
 
 
 		clear: ->
+			###
+			Removes all cached elements
+			###
 			@data.length = 0
 			@dataMap = {}
+			@_invalidateCache()
 
+
+		_invalidateCache: ->
+			@filterCache.length = 0
+
+
+		filter: (filter) ->
+			# check if filter was run with the same arguments already
+			# if filter is in @filterCache return the cached result
+			# otherwise calculate the array, cache it and return it
+			
 
 		size: ->
 			###
