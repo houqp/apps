@@ -21,26 +21,26 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ###
 
 
-# A filter for returning a list with elements equal to the provided one
-angular.module('OC').factory '_EqualFilter', ['_ModelFilter', 
+# A filter for returning a list with all elements unequal to the provided one
+angular.module('OC').factory '_UnequalFilter', ['_ModelFilter', 
 (_ModelFilter) ->
 
-	class EqualFilter extends _ModelFilter
+	class UnequalFilter extends _ModelFilter
 
 		constructor: (@field, @value) ->
-			name = 'equal'
+			name = 'unequal'
 			super(name, [@field, @value])
 
 
 		exec: (data) ->
-			equal = []
+			unequal = []
 			for entry in data
-				if entry[@field] == @value
-					equal.push(entry)
+				if entry[@field] != @value
+					unequal.push(entry)
 
-			return equal
+			return unequal
 
 
-	return EqualFilter
+	return UnequalFilter
 ]
 
