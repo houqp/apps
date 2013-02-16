@@ -20,42 +20,27 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 ###
 
-describe '_MaximumFilter', ->
+
+# A filter for returning the minium of an array based on the object
+angular.module('OC').factory '_EqualFilter', ['_ModelFilter', 
+(_ModelFilter) ->
+
+	class EqualFilter extends _ModelFilter
+
+		constructor: (@field, @value) ->
+			name = 'maximum'
+			super(name, [@field, @value])
 
 
-	beforeEach module 'OC'
+		exec: (data) ->
+			equal = []
+			for entry in data
+				if entry[@field] == @value
+					equal.push(entry)
 
-	beforeEach inject (_MaximumFilter, _Model, _ModelFilter) =>
-		@filter = _MaximumFilter
-		@modelFilter = _ModelFilter
-		@model = _Model
-
-
-	it 'should be a _ModelFilter subclass', =>
-		expect(new @filter('id') instanceof @modelFilter).toBe(true)
+			return equal
 
 
-	it 'should return undefined on empty list', =>
-		filter = new @filter('id')
-		expect(filter.exec([])).toBe(undefined)
-
-
-	it 'should return the minimum', =>
-		data1 = 
-			id: 3
-
-		data2 =
-			id: 1
-
-		data3 =
-			id: 5
-		
-		data = [
-			data1
-			data3
-			data2
-		]
-		filter = new @filter('id')
-
-		expect(filter.exec(data)).toBe(data3)
+	return EqualFilter
+]
 
