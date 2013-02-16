@@ -25,7 +25,7 @@ angular.module('OC').factory '_Request', ->
 
 	class Request
 
-		constructor: (@_$http, @_$rootScope, @_publisher, @_token, @_router) ->
+		constructor: (@_$http, @_$rootScope, @_publisher, @_router) ->
 			@_initialized = false
 			@_shelvedRequests = []
 
@@ -45,15 +45,13 @@ angular.module('OC').factory '_Request', ->
 			url = @_router.generate(route, routeParams)
 
 			defaultConfig =
-				method: 'GET'
 				url: url
 				data: data
 
 			# overwrite default values from passed in config
-			for key, value of config
-				defaultConfig[key] = value
+			angular.extend(defaultConfig, config)
 
-			@_$http(config)
+			@_$http(defaultConfig)
 				.success (data, status, headers, config) =>
 					if onSuccess
 						onSuccess(data, status, headers, config)

@@ -27,7 +27,7 @@ angular.module('OC').factory '_ModelFilter', ['_NotImplementedError',
 
 	class ModelFilter
 
-		constructor: (@name, @args=[]) ->
+		constructor: (@_name, @_args=[]) ->
 
 
 		exec: ->
@@ -35,8 +35,8 @@ angular.module('OC').factory '_ModelFilter', ['_NotImplementedError',
 
 
 		hashCode: (filter) ->
-			hash = @name
-			for arg in @args
+			hash = @_name
+			for arg in @_args
 				hash += '_' + arg
 
 			return hash

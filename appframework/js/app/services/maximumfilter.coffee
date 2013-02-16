@@ -27,16 +27,16 @@ angular.module('OC').factory '_MaximumFilter', ['_ModelFilter',
 
 	class MaximumFilter extends _ModelFilter
 
-		constructor: (@field) ->
+		constructor: (@_field) ->
 			name = 'maximum'
-			super(name, [@field])
+			super(name, [@_field])
 
 
 		exec: (data) ->
 			maximum = undefined
 			for entry in data
 				if angular.isUndefined(maximum) or 
-				entry[@field] > maximum[@field]
+				entry[@_field] > maximum[@_field]
 					maximum = entry
 
 			return maximum

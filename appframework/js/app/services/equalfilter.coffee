@@ -27,15 +27,15 @@ angular.module('OC').factory '_EqualFilter', ['_ModelFilter',
 
 	class EqualFilter extends _ModelFilter
 
-		constructor: (@field, @value) ->
+		constructor: (@_field, @_value) ->
 			name = 'equal'
-			super(name, [@field, @value])
+			super(name, [@_field, @_value])
 
 
 		exec: (data) ->
 			equal = []
 			for entry in data
-				if entry[@field] == @value
+				if entry[@_field] == @_value
 					equal.push(entry)
 
 			return equal

@@ -28,7 +28,7 @@ angular.module('OC').factory '_Publisher', ->
 	class Publisher
 
 		constructor: ->
-			@subscriptions = {}
+			@_subscriptions = {}
 
 
 		# Use this to subscribe to a certain hashkey in the returned json data
@@ -50,14 +50,14 @@ angular.module('OC').factory '_Publisher', ->
 		#	Publisher.subscribeModelTo('modelName', myModelInstance)
 		#
 		subscribeModelTo: (model, name) ->
-			@subscriptions[name] or= []
-			@subscriptions[name].push(model)
+			@_subscriptions[name] or= []
+			@_subscriptions[name].push(model)
 
 
 		# This will publish data from the server to all registered subscribers
 		# The parameter 'name' is the name under which subscribers have registered
 		publishDataTo: (data, name) ->
-			for subscriber in @subscriptions[name] || []
+			for subscriber in @_subscriptions[name] || []
 				subscriber.handle(data)
 
 

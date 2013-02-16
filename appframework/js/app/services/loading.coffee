@@ -28,23 +28,23 @@ angular.module('OC').factory 'Loading', ->
 	class Loading
 
 		constructor: ->
-			@count = 0
+			@_count = 0
 
 
 		increase: ->
-			@count += 1
+			@_count += 1
 
 
 		decrease: ->
-			@count -= 1
+			@_count -= 1
 
 
 		getCount: ->
-			return @count
+			return @_count
 
 
 		isLoading: ->
-			return @count > 0
+			return @_count > 0
 
 
 	return new Loading()

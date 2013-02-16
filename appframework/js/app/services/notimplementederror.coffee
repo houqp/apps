@@ -26,10 +26,10 @@ angular.module('OC').factory '_NotImplementedError', ->
 
 	class NotImplementedError
 
-		constructor: (@msg) ->
+		constructor: (@_msg) ->
 
 		getMessage: ->
-			return @msg
+			return @_msg
 
 
 	return NotImplementedError

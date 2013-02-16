@@ -27,16 +27,16 @@ angular.module('OC').factory '_MinimumFilter', ['_ModelFilter',
 
 	class MinimumFilter extends _ModelFilter
 
-		constructor: (@field) ->
+		constructor: (@_field) ->
 			name = 'minimum'
-			super(name, [@field])
+			super(name, [@_field])
 
 
 		exec: (data) ->
 			minimum = undefined
 			for entry in data
 				if angular.isUndefined(minimum) or 
-				entry[@field] < minimum[@field]
+				entry[@_field] < minimum[@_field]
 					minimum = entry
 
 			return minimum
