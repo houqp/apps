@@ -20,45 +20,27 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 ###
 
-describe '_MaximumFilter', ->
+
+# A filter for returning a list with elements equal to the provided one
+angular.module('OC').factory '_BiggerThanEqualFilter', ['_ModelFilter', 
+(_ModelFilter) ->
+
+	class BiggerThanEqualFilter extends _ModelFilter
+
+		constructor: (@_field, @_value) ->
+			name = 'biggerthanequal'
+			super(name, [@_field, @_value])
 
 
-	beforeEach module 'OC'
+		exec: (data) ->
+			filtered = []
+			for entry in data
+				if entry[@_field] >= @_value
+					filtered.push(entry)
 
-	beforeEach inject (_MaximumFilter, _Model, _ModelFilter) =>
-		@filter = _MaximumFilter
-		@modelFilter = _ModelFilter
-		@model = _Model
-
-
-	it 'should be a _ModelFilter subclass', =>
-		expect(new @filter('id') instanceof @modelFilter).toBe(true)
-
-	it 'should have a correct hash', =>
-		expect(new @filter('id').hashCode()).toBe('maximum_id')
+			return filtered
 
 
-	it 'should return undefined on empty list', =>
-		filter = new @filter('id')
-		expect(filter.exec([])).toBe(undefined)
-
-
-	it 'should return the minimum', =>
-		data1 = 
-			id: 3
-
-		data2 =
-			id: 1
-
-		data3 =
-			id: 5
-		
-		data = [
-			data1
-			data3
-			data2
-		]
-		filter = new @filter('id')
-
-		expect(filter.exec(data)).toBe(data3)
+	return BiggerThanEqualFilter
+]
 

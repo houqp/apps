@@ -35,6 +35,10 @@ describe '_MinimumFilter', ->
 		expect(new @filter('id') instanceof @modelFilter).toBe(true)
 
 
+	it 'should have a correct hash', =>
+		expect(new @filter('id').hashCode()).toBe('minimum_id')
+
+
 	it 'should return undefined on empty list', =>
 		filter = new @filter('id')
 		expect(filter.exec([])).toBe(undefined)

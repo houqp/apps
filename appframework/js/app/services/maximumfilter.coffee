@@ -21,7 +21,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ###
 
 
-# A filter for returning the minium of an array based on the object
+# A filter for returning the maximum of an array based on the object
 angular.module('OC').factory '_MaximumFilter', ['_ModelFilter', 
 (_ModelFilter) ->
 
