@@ -37,7 +37,7 @@ angular.module('OC').factory '_ModelFilter', ['_NotImplementedError',
 		hashCode: (filter) ->
 			hash = @_name
 			for arg in @_args
-				hash += '_' + arg
+				hash += '_' + arg.replace('_', '__')
 
 			return hash
 
