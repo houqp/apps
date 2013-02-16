@@ -313,7 +313,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
           MinimumFilter.__super__.constructor.call(this, name, [this.field]);
         }
 
-        MinimumFilter.prototype.filter = function(data) {
+        MinimumFilter.prototype.exec = function(data) {
           var entry, minimum, _i, _len;
           minimum = void 0;
           for (_i = 0, _len = data.length; _i < _len; _i++) {
@@ -365,9 +365,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
     Model = (function() {
 
       function Model() {
-        this.data = [];
-        this.dataMap = {};
-        this.filterCache = {};
+        this._data = [];
+        this._dataMap = {};
+        this._filterCache = {};
       }
 
       Model.prototype.handle = function(data) {
@@ -382,11 +382,11 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
         			Adds a new entry or updates an entry if the id exists already
         */
         this._invalidateCache();
-        if (angular.isDefined(this.dataMap[data.id])) {
+        if (angular.isDefined(this._dataMap[data.id])) {
           return this.update(data);
         } else {
-          this.data.push(data);
-          return this.dataMap[data.id] = data;
+          this._data.push(data);
+          return this._dataMap[data.id] = data;
         }
       };
 
@@ -414,14 +414,14 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
         /*
         			Return an entry by its id
         */
-        return this.dataMap[id];
+        return this._dataMap[id];
       };
 
       Model.prototype.getAll = function() {
         /*
         			Returns all stored entries
         */
-        return this.data;
+        return this._data;
       };
 
       Model.prototype.removeById = function(id) {
@@ -430,13 +430,13 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
         */
 
         var counter, entry, _i, _len, _ref, _results;
-        _ref = this.data;
+        _ref = this._data;
         _results = [];
         for (counter = _i = 0, _len = _ref.length; _i < _len; counter = ++_i) {
           entry = _ref[counter];
           if (entry.id === id) {
-            this.data.splice(counter, 1);
-            delete this.dataMap[id];
+            this._data.splice(counter, 1);
+            delete this._dataMap[id];
             this._invalidateCache();
             break;
           } else {
@@ -450,22 +450,33 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
         /*
         			Removes all cached elements
         */
-        this.data.length = 0;
-        this.dataMap = {};
+        this._data.length = 0;
+        this._dataMap = {};
         return this._invalidateCache();
       };
 
       Model.prototype._invalidateCache = function() {
-        return this.filterCache.length = 0;
+        return this._filterCache = {};
       };
 
-      Model.prototype.filter = function(filter) {};
+      Model.prototype.get = function(filter) {
+        /*
+        			Calls, caches and returns filter results
+        */
+
+        var hash;
+        hash = filter.hashCode();
+        if (!angular.isDefined(this._filterCache[hash])) {
+          this._filterCache[hash] = filter.exec(this._data);
+        }
+        return this._filterCache[hash];
+      };
 
       Model.prototype.size = function() {
         /*
         			Return the number of all stored entries
         */
-        return this.data.length;
+        return this._data.length;
       };
 
       return Model;
@@ -512,7 +523,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
           this.args = args != null ? args : [];
         }
 
-        ModelFilter.prototype.filter = function() {
+        ModelFilter.prototype.exec = function() {
           throw new _NotImplementedError('Not implemented');
         };
 

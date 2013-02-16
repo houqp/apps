@@ -30,7 +30,7 @@ angular.module('OC').factory '_ModelFilter', ['_NotImplementedError',
 		constructor: (@name, @args=[]) ->
 
 
-		filter: ->
+		exec: ->
 			throw new _NotImplementedError('Not implemented')
 
 

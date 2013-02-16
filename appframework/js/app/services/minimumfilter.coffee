@@ -32,7 +32,7 @@ angular.module('OC').factory '_MinimumFilter', ['_ModelFilter',
 			super(name, [@field])
 
 
-		filter: (data) ->
+		exec: (data) ->
 			minimum = undefined
 			for entry in data
 				if angular.isUndefined(minimum) or 

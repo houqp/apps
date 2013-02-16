@@ -27,9 +27,9 @@ angular.module('OC').factory '_Model', ->
 	class Model
 
 		constructor: ->
-			@data = []
-			@dataMap = {}
-			@filterCache = {}
+			@_data = []
+			@_dataMap = {}
+			@_filterCache = {}
 
 
 		handle: (data) ->
@@ -44,11 +44,11 @@ angular.module('OC').factory '_Model', ->
 			Adds a new entry or updates an entry if the id exists already
 			###
 			@_invalidateCache()
-			if angular.isDefined(@dataMap[data.id])
+			if angular.isDefined(@_dataMap[data.id])
 				@update(data)
 			else
-				@data.push(data)
-				@dataMap[data.id] = data
+				@_data.push(data)
+				@_dataMap[data.id] = data
 
 
 		update: (data) ->
@@ -68,24 +68,24 @@ angular.module('OC').factory '_Model', ->
 			###
 			Return an entry by its id
 			###
-			return @dataMap[id]
+			return @_dataMap[id]
 
 
 		getAll: ->
 			###
 			Returns all stored entries
 			###
-			return @data
+			return @_data
 
 
 		removeById: (id) ->
 			###
 			Remove an entry by id
 			###
-			for entry, counter in @data
+			for entry, counter in @_data
 				if entry.id == id
-					@data.splice(counter, 1)
-					delete @dataMap[id]
+					@_data.splice(counter, 1)
+					delete @_dataMap[id]
 					@_invalidateCache()
 					break
 
@@ -94,26 +94,30 @@ angular.module('OC').factory '_Model', ->
 			###
 			Removes all cached elements
 			###
-			@data.length = 0
-			@dataMap = {}
+			@_data.length = 0
+			@_dataMap = {}
 			@_invalidateCache()
 
 
 		_invalidateCache: ->
-			@filterCache.length = 0
+			@_filterCache = {}
 
 
-		filter: (filter) ->
-			# check if filter was run with the same arguments already
-			# if filter is in @filterCache return the cached result
-			# otherwise calculate the array, cache it and return it
+		get: (filter) ->
+			###
+			Calls, caches and returns filter results
+			###
+			hash = filter.hashCode()
+			if not angular.isDefined(@_filterCache[hash])
+				@_filterCache[hash] = filter.exec(@_data)
+			return @_filterCache[hash]
 			
 
 		size: ->
 			###
 			Return the number of all stored entries
 			###
-			return @data.length
+			return @_data.length
 
 
 	return Model

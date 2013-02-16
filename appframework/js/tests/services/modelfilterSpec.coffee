@@ -45,7 +45,7 @@ describe '_ModelFilter', ->
 
 	it 'should throw an error when filtering', =>
 		expect =>
-			new @filter().filter()
+			new @filter().exec()
 		.toThrow(new @error('Not implemented'))
 
 

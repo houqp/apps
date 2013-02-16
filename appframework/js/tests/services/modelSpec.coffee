@@ -25,20 +25,20 @@ describe '_Model', ->
 	beforeEach module 'OC'
 
 	beforeEach inject (_Model) =>
-			@model = new _Model()
+		@model = new _Model()
 
-			@data1 = 
-				id: 1
-				name: 'john'
-				mail: 'john.com'
+		@data1 = 
+			id: 1
+			name: 'john'
+			mail: 'john.com'
 
-			@data2 = 
-				id: 5
-				name: 'frank'
-				mail: 'frank.de'
+		@data2 = 
+			id: 5
+			name: 'frank'
+			mail: 'frank.de'
 
-			@model.add(@data1)
-			@model.add(@data2)
+		@model.add(@data1)
+		@model.add(@data2)
 
 
 	it 'should return correct size', =>
@@ -123,3 +123,74 @@ describe '_Model', ->
 		expect(@model.getById(2)).toBe(undefined)
 
 
+	it 'should support filters', =>
+		filterMock =
+			exec: jasmine.createSpy()
+			hashCode: ->
+				return 'a'
+
+		@model.get(filterMock)
+		
+		expect(filterMock.exec).toHaveBeenCalledWith(@model.getAll())
+
+
+	it 'should cache filters', =>
+		filterMock1 =
+			exec: jasmine.createSpy('1').andReturn('value')
+			hashCode: ->
+				return 'a'
+
+		filterMock2 =
+			exec: jasmine.createSpy('2').andReturn('value')
+			hashCode: ->
+				return 'a'
+
+		@model.get(filterMock1)
+		@model.get(filterMock2)
+		
+		expect(filterMock1.exec).toHaveBeenCalledWith(@model.getAll())
+		expect(filterMock2.exec).not.toHaveBeenCalled()
+
+
+	@testClearCache = (callback) =>
+		filterMock1 =
+			exec: jasmine.createSpy().andReturn('value')
+			hashCode: ->
+				return 'a'
+
+		filterMock2 =
+			exec: jasmine.createSpy().andReturn('value')
+			hashCode: ->
+				return 'a'
+
+		@model.get(filterMock1)
+		callback()
+		@model.get(filterMock2)
+		
+		return [
+			filterMock1
+			filterMock2
+		]
+
+
+	it 'should clear the cache on add', =>
+		mocks = @testClearCache =>
+			@model.add({id: 4})
+		expect(mocks[0].exec).toHaveBeenCalled()
+		expect(mocks[1].exec).toHaveBeenCalled()
+
+
+	it 'should clear the cache on update', =>
+		mocks = @testClearCache =>
+			@model.update({id: 1})
+
+		expect(mocks[0].exec).toHaveBeenCalled()
+		expect(mocks[1].exec).toHaveBeenCalled()
+
+
+	it 'should clear the cache on add', =>
+		mocks = @testClearCache =>
+			@model.removeById(1)
+
+		expect(mocks[0].exec).toHaveBeenCalled()
+		expect(mocks[1].exec).toHaveBeenCalled()

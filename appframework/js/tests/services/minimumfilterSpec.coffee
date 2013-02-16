@@ -37,7 +37,7 @@ describe '_MinimumFilter', ->
 
 	it 'should return undefined on empty list', =>
 		filter = new @filter('id')
-		expect(filter.filter([])).toBe(undefined)
+		expect(filter.exec([])).toBe(undefined)
 
 
 	it 'should return the minimum', =>
@@ -57,5 +57,5 @@ describe '_MinimumFilter', ->
 		]
 		filter = new @filter('id')
 
-		expect(filter.filter(data)).toBe(data2)
+		expect(filter.exec(data)).toBe(data2)
 
