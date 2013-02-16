@@ -916,7 +916,10 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
           _ref = this._args;
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             arg = _ref[_i];
-            hash += '_' + arg.replace('_', '__');
+            if (angular.isString(arg)) {
+              arg = arg.replace(/_/gi, '__');
+            }
+            hash += '_' + arg;
           }
           return hash;
         };

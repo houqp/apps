@@ -44,8 +44,8 @@ describe '_ModelFilter', ->
 
 
 	it 'should escape underlines of field names to avoid collissions', =>
-		filter = new @filter('message', ['test_a'])
-		expect(filter.hashCode()).toBe('message_test__a')		
+		filter = new @filter('message', ['test__a'])
+		expect(filter.hashCode()).toBe('message_test____a')
 
 
 	it 'should throw an error when filtering', =>
