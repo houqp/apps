@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-08 00:01+0100\n"
+"Project-Id-Version: ownCloud Apps 5.0.0\n"
+"Report-Msgid-Bugs-To: translations@owncloud.org\n"
+"POT-Creation-Date: 2013-03-19 00:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,35 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: js/editor.js:72 js/editor.js:156 js/editor.js:163
+#: js/editor.js:73 js/editor.js:158 js/editor.js:166
 msgid "Save"
 msgstr ""
 
-#: js/editor.js:74
+#: js/editor.js:75
+msgid "Search:"
+msgstr ""
+
+#: js/editor.js:78
 msgid "Close"
 msgstr ""
 
-#: js/editor.js:149
+#: js/editor.js:132
+msgid "Next"
+msgstr ""
+
+#: js/editor.js:133
+msgid "Clear"
+msgstr ""
+
+#: js/editor.js:151
 msgid "Saving..."
 msgstr ""
 
-#: js/editor.js:239
+#: js/editor.js:159
+msgid "Failed to save file"
+msgstr ""
+
+#: js/editor.js:246
 msgid "An error occurred!"
 msgstr ""
 

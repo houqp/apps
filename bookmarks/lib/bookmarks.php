@@ -51,7 +51,24 @@ class OC_Bookmarks_Bookmarks{
 		$tags = $query->execute($params)->fetchAll();
 		return $tags;
 	}
-	
+
+	public static function findOneBookmark($id) {
+		$CONFIG_DBTYPE = OCP\Config::getSystemValue( 'dbtype', 'sqlite' );
+		if($CONFIG_DBTYPE == 'pgsql') {
+			$group_fct = 'array_agg(tag)';
+		}
+		else {
+			$group_fct = 'GROUP_CONCAT(tag)';
+		}
+		$sql = "SELECT *, (select $group_fct from *PREFIX*bookmarks_tags where bookmark_id = b.id) as tags
+				FROM *PREFIX*bookmarks b
+				WHERE user_id = ? and id = ?";
+		$query = OCP\DB::prepare($sql);
+		$result = $query->execute(array(OCP\USER::getUser(), $id))->fetchRow();
+		$result['tags'] = explode(',', $result['tags']);
+		return $result;
+	}
+
 	/**
 	 * @brief Finds all bookmarks, matching the filter
 	 * @param offset result offset
@@ -295,11 +312,32 @@ class OC_Bookmarks_Bookmarks{
 	 * @return int The id of the bookmark created
 	 */
 	public static function addBookmark($url, $title, $tags=array(), $description='', $is_public=false) {
-
 		$is_public = $is_public ? 1 : 0;
-		//FIXME: Detect and do smth when user adds a known URL
+		$enc_url = htmlspecialchars_decode($url);
 		$_ut = self::getNowValue();
-
+		// Change lastmodified date if the record if already exists
+		$sql = "SELECT * from  *PREFIX*bookmarks WHERE url = ? and user_id = ?";
+		$query = OCP\DB::prepare($sql, 1);
+		$result = $query->execute(array($enc_url, OCP\USER::getUser()));
+		if ($row = $result->fetchRow()){
+			$params = array();
+			$title_str = '';
+			if(trim($title) != '') { // Do we replace the old title
+				$title_str = ' , title = ?';
+				$params[] = $title;
+			}
+			$desc_str = '';
+			if(trim($title) != '') { // Do we replace the old description
+				$desc_str = ' , description = ?';
+				$params[] = $description;
+			}
+			$sql = "UPDATE *PREFIX*bookmarks SET lastmodified = $_ut $title_str $desc_str WHERE url = ? and user_id = ?";
+			$params[] = $enc_url;
+			$params[] = OCP\USER::getUser();
+			$query = OCP\DB::prepare($sql);
+			$query->execute($params);
+			return $row['id'];
+		}
 		$query = OCP\DB::prepare("
 			INSERT INTO *PREFIX*bookmarks
 			(url, title, user_id, public, added, lastmodified, description)
@@ -307,7 +345,7 @@ class OC_Bookmarks_Bookmarks{
 			");
 
 		$params=array(
-			htmlspecialchars_decode($url),
+			$enc_url,
 			htmlspecialchars_decode($title),
 			OCP\USER::getUser(),
 			$is_public,
@@ -375,4 +413,35 @@ class OC_Bookmarks_Bookmarks{
 		OCP\DB::commit();
 		return array();
 	}
+
+  public static function getURLMetadata($url) {
+		//allow only http(s) and (s)ftp
+		$protocols = '/^[hs]{0,1}[tf]{0,1}tp[s]{0,1}\:\/\//i';
+		//if not (allowed) protocol is given, assume http
+		if(preg_match($protocols, $url) == 0) {
+			$url = 'http://' . $url;
+		}
+		$metadata['url'] = $url;
+		$page  = OC_Util::getUrlContent($url);
+		if($page) {
+			if(preg_match( "/<title>(.*)<\/title>/sUi", $page, $match ) !== false)
+				$metadata['title'] =  html_entity_decode($match[1], ENT_NOQUOTES , 'UTF-8');
+				//Not the best solution but....
+				$metadata['title'] = str_replace('&trade;', chr(153), $metadata['title']);
+				$metadata['title'] = str_replace('&dash;', '‐', $metadata['title']);
+				$metadata['title'] = str_replace('&ndash;', '–', $metadata['title']);
+		}
+		return $metadata;
+	}
+
+	public static function analyzeTagRequest($line) {
+		$tags = explode(',', $line);
+		$filterTag = array();
+		foreach($tags as $tag){
+			if(trim($tag) != '')
+				$filterTag[] = trim($tag);
+		}
+		return $filterTag;
+	}
 }
+

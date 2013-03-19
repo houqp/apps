@@ -27,23 +27,30 @@ OCP\JSON::callCheck();
 
 require_once __DIR__.'/../loghandler.php';
 
-$aid = isset($_POST['aid'])?$_POST['aid']:null;
+$aid = isset($_POST['aid']) ? $_POST['aid'] : null;
 if(!$aid) {
-	$aid = min(OC_Contacts_Addressbook::activeIds()); // first active addressbook.
+	$ids = OCA\Contacts\Addressbook::activeIds();
+	if(count($ids) > 0) {
+		$aid = min($ids); // first active addressbook.
+	} else {
+		$addressbooks = OCA\Contacts\Addressbook::all(OCP\User::getUser());
+		if(count($addressbooks) === 0) {
+			bailOut(OCA\Contacts\App::$l10n->t('You have no addressbooks.'));
+		} else {
+			$aid = $addressbooks[0]['id'];
+		}
+	}
 }
 
-$isnew = isset($_POST['isnew'])?$_POST['isnew']:false;
-$fn = trim($_POST['fn']);
-$n = trim($_POST['n']);
+$isnew = isset($_POST['isnew']) ? $_POST['isnew'] : false;
 
-$vcard = new OC_VObject('VCARD');
-$vcard->setUID();
-$vcard->setString('FN', $fn);
-$vcard->setString('N', $n);
+$vcard = Sabre\VObject\Component::create('VCARD');
+$uid = substr(md5(rand().time()), 0, 10);
+$vcard->add('UID', $uid);
 
 $id = null;
 try {
-	$id = OC_Contacts_VCard::add($aid, $vcard, null, $isnew);
+	$id = OCA\Contacts\VCard::add($aid, $vcard, null, $isnew);
 } catch(Exception $e) {
 	bailOut($e->getMessage());
 }
@@ -52,7 +59,7 @@ if(!$id) {
 	bailOut('There was an error adding the contact.');
 }
 
-$lastmodified = OC_Contacts_App::lastModified($vcard);
+$lastmodified = OCA\Contacts\App::lastModified($vcard);
 if(!$lastmodified) {
 	$lastmodified = new DateTime();
 }
@@ -60,6 +67,7 @@ OCP\JSON::success(array(
 	'data' => array(
 		'id' => $id,
 		'aid' => $aid,
+		'details' => OCA\Contacts\VCard::structureContact($vcard),
 		'lastmodified' => $lastmodified->format('U')
 	)
 ));

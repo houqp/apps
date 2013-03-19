@@ -34,7 +34,7 @@ class OC_Migration_Provider_Contacts extends OC_Migration_Provider{
 		switch( $this->appinfo->version ) {
 			default:
 				// All versions of the app have had the same db structure, so all can use the same import function
-				$query = $this->content->prepare( 'SELECT * FROM `contacts_addressbooks` WHERE `userid` LIKE ?' );
+				$query = $this->content->prepare( 'SELECT * FROM `contacts_addressbooks` WHERE `userid` = ?' );
 				$results = $query->execute( array( $this->olduid ) );
 				$idmap = array();
 				while( $row = $results->fetchRow() ) {
@@ -44,12 +44,12 @@ class OC_Migration_Provider_Contacts extends OC_Migration_Provider{
 					// Map the id
 					$idmap[$row['id']] = OCP\DB::insertid('*PREFIX*contacts_addressbooks');
 					// Make the addressbook active
-					OC_Contacts_Addressbook::setActive($idmap[$row['id']], true);
+					OCA\Contacts\Addressbook::setActive($idmap[$row['id']], true);
 				}
 				// Now tags
 				foreach($idmap as $oldid => $newid) {
 
-					$query = $this->content->prepare( 'SELECT * FROM `contacts_cards` WHERE `addressbookid` LIKE ?' );
+					$query = $this->content->prepare( 'SELECT * FROM `contacts_cards` WHERE `addressbookid` = ?' );
 					$results = $query->execute( array( $oldid ) );
 					while( $row = $results->fetchRow() ) {
 						// Import the contacts

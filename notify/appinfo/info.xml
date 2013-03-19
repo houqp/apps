@@ -5,10 +5,8 @@
 	<description>Lets other apps send notifications to ownCloud users.</description>
 	<licence>AGPL</licence>
 	<author>Florian Hülsmann</author>
-	<require>4.9</require>
-	<shipped>true</shipped>
+	<require>4.93</require>
 	<standalone/>
-	<default_enable/>
 	<remote>
 		<notify_feed>feed.php</notify_feed>
 	</remote>

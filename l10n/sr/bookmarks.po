@@ -3,12 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+#   <marko@evizo.com>, 2012.
+#  <theranchcowboy@gmail.com>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2012-11-08 00:01+0100\n"
-"PO-Revision-Date: 2012-11-07 23:01+0000\n"
+"POT-Creation-Date: 2013-02-22 00:00+0100\n"
+"PO-Revision-Date: 2013-02-20 23:32+0000\n"
 "Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
 "Language-Team: Serbian (http://www.transifex.com/projects/p/owncloud/language/sr/)\n"
 "MIME-Version: 1.0\n"
@@ -17,79 +19,87 @@ msgstr ""
 "Language: sr\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+#: ajax/import.php:9
+msgid "No file provided for import"
+msgstr ""
+
 #: ajax/import.php:21
 msgid "Unsupported file type for import"
-msgstr ""
+msgstr "Неподржана врста датотеке за увоз"
 
 #: appinfo/app.php:17
 msgid "Bookmarks"
-msgstr ""
+msgstr "Обележивачи"
 
-#: js/addBm.js:42 js/bookmarks.js:230
+#: js/addBm.js:42 js/bookmarks.js:235
 msgid "Tags"
-msgstr ""
+msgstr "Ознаке"
 
 #: js/bookmarks.js:22
 msgid "Filter by tag"
-msgstr ""
+msgstr "Филтрирај по ознаци"
 
 #: js/bookmarks.js:132
 msgid "Edit bookmark"
-msgstr ""
+msgstr "Уреди обележивач"
 
-#: js/bookmarks.js:369
+#: js/bookmarks.js:366
 msgid "Are you sure you want to remove this tag from every entry?"
-msgstr ""
+msgstr "Желите ли да уклоните ову ознаку из сваког уноса?"
 
-#: js/bookmarks.js:370
+#: js/bookmarks.js:367
 msgid "Warning"
+msgstr "Упозорење"
+
+#: js/settings.js:18
+msgid "Import error"
 msgstr ""
 
-#: js/settings.js:25
+#: js/settings.js:29
 msgid "Import completed successfully."
-msgstr ""
+msgstr "Увоз је успешно завршен."
 
-#: js/settings.js:56
+#: js/settings.js:60
 msgid "Uploading..."
-msgstr ""
+msgstr "Отпремам…"
 
 #: lib/search.php:38
 msgid "Bookm."
-msgstr ""
+msgstr "Обележ."
 
-#: templates/addBm.php:11
+#: templates/addBm.php:5
 msgid "Add a bookmark"
-msgstr ""
+msgstr "Додај обележивач"
 
-#: templates/addBm.php:14
+#: templates/addBm.php:8
 msgid "Close"
 msgstr "Затвори"
 
-#: templates/addBm.php:22 templates/js_tpl.php:33
+#: templates/addBm.php:16 templates/js_tpl.php:27
 msgid "The title of the page"
-msgstr ""
+msgstr "Наслов странице"
 
-#: templates/addBm.php:27 templates/js_tpl.php:37
+#: templates/addBm.php:21 templates/js_tpl.php:31
 msgid "The address of the page"
-msgstr ""
+msgstr "Адреса странице"
 
-#: templates/addBm.php:40 templates/js_tpl.php:46
+#: templates/addBm.php:34 templates/js_tpl.php:40
 msgid "Description of the page"
-msgstr ""
+msgstr "Опис странице"
 
-#: templates/addBm.php:44 templates/js_tpl.php:50
+#: templates/addBm.php:38 templates/js_tpl.php:44
 msgid "Save"
-msgstr "Сними"
+msgstr "Сачувај"
 
-#: templates/js_tpl.php:6 templates/js_tpl.php:64
+#: templates/js_tpl.php:6 templates/js_tpl.php:58
 msgid "Delete"
 msgstr "Обриши"
 
-#: templates/js_tpl.php:20 templates/js_tpl.php:60
+#: templates/js_tpl.php:14 templates/js_tpl.php:54
 msgid "Edit"
 msgstr "Уреди"
 
-#: templates/js_tpl.php:49
+#: templates/js_tpl.php:43
 msgid "Cancel"
 msgstr "Откажи"
 
@@ -97,11 +107,11 @@ msgstr "Откажи"
 msgid ""
 "Drag this to your browser bookmarks and click it, when you want to bookmark "
 "a webpage quickly:"
-msgstr ""
+msgstr "Превуците ово у прегледач и кликните ако на брзину желите да обележите веб страницу:"
 
 #: templates/list.php:15
 msgid "Read later"
-msgstr ""
+msgstr "Прочитаћу касније"
 
 #: templates/list.php:22
 msgid "Address"
@@ -109,36 +119,36 @@ msgstr "Адреса"
 
 #: templates/list.php:23
 msgid "Add"
-msgstr ""
+msgstr "Додај"
 
-#: templates/list.php:30
+#: templates/list.php:31
 msgid "Related Tags"
-msgstr ""
+msgstr "Сродне ознаке"
 
 #: templates/list.php:38 templates/list.php:40
 msgid "Settings"
-msgstr "Подешавања"
+msgstr "Поставке"
 
-#: templates/list.php:52
+#: templates/list.php:54
 msgid "You have no bookmarks"
-msgstr ""
+msgstr "Немате обележиваче"
 
-#: templates/list.php:57
+#: templates/list.php:59
 msgid "You can also try to import a bookmark file"
-msgstr ""
+msgstr "Можете да пробате да увезете и датотеку са обележивачима"
 
 #: templates/settings.php:11
 msgid "Bookmarklet"
-msgstr ""
+msgstr "Активан обележивач"
 
 #: templates/settings.php:23
 msgid "Export & Import"
-msgstr ""
+msgstr "Извоз и увоз"
 
 #: templates/settings.php:24
 msgid "Export"
-msgstr ""
+msgstr "Извези"
 
 #: templates/settings.php:26
 msgid "Import"
-msgstr ""
+msgstr "Увези"

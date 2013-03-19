@@ -1,8 +1,24 @@
 #content { overflow: auto; height: 100%; }
-#firstrun, #firstrun_setting{ width: 80%; margin: 5em auto auto auto; text-align: center; font-weight:bold; font-size:1.5em;  color:#777; position: relative;}
-#firstrun small { display: block; font-weight: normal; font-size: 0.5em;  }
-#firstrun .button { font-size: 0.7em; }
-#firstrun #selections { font-size:0.8em;  font-weight: normal; width: 100%; margin: 2em auto auto auto; clear: both; }
+
+#firstrun .bkm_hint { display: block; font-weight: normal; /*font-size: 0.5em; */ }
+#firstrun .title { font-weight:bold; }
+
+#distance {
+	width:1px;
+	height:50%;
+	margin-bottom:-13.75em; /* half of container's height */
+	float:left;
+}
+
+#firstrun_message {
+	margin:0 auto;
+	position:relative; /* puts container in front of distance */
+	text-align:left;
+	height:27.5em;
+	width:45em;
+	clear:left;
+}
+
 #firstrun_setting { font-size: 100%; text-decoration: underline}
 
 input.disabled, input.disabled:hover, input.disabled:focus {
@@ -10,13 +26,16 @@ input.disabled, input.disabled:hover, input.disabled:focus {
 	background-color: #ddd;
 	color: gray;
 }
-#leftcontent {
-	top: 4em !important;
-}
+#settingsbtn { background: transparent; color:#666; 
+	border-bottom: 1px solid #ddd; border-top: 1px solid #fff; }
+#settingsbtn:hover { background:#dbdbdb !important; color:#999; 
+	border-bottom: 1px solid #CCCCCC; border-top: 1px solid #D4D4D4; }
+#settingsbtn img { width: 18px; height: 18px; margin: 10px;	}
 
 #rightcontent {
-    	padding-top: 5px;
-    	top: 1em !important;
+	padding-top: 5px;
+	top: 1em !important;
+
 }
 
 .bookmarks_headline {
@@ -31,17 +50,24 @@ input.disabled, input.disabled:hover, input.disabled:focus {
 	padding: 0.5ex;
 }
 
-.bookmarks_list {
+.bookmarks_list, #firstrun {
 	overflow: auto;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	padding-top: 3em;
-	width: 100%;
+/* 	width: 100%; */
 	height: 100%;
+	position: fixed;
+	left: 25em;
+	right:0;
 }
 
 #add_form {
 	padding-bottom: 2em;
+}
+
+#add_form input {
+	margin: 0.3em;
 }
 #add_url {
 	width: 12em;
@@ -63,7 +89,7 @@ input.disabled, input.disabled:hover, input.disabled:focus {
 .bookmark_actions {
 	position: absolute;
 	right: 1em;
-	bottom:0.3em;
+	bottom:0.8em;
 	display: none;
 }
 .bookmark_actions span { margin: 0 0.4em; }
@@ -74,14 +100,14 @@ input.disabled, input.disabled:hover, input.disabled:focus {
 
 .bookmark_single {
 	position: relative;
-	padding: 0.5em 1em;
+	padding: 0.2em 1em;
         min-height: 3em;
 	border-bottom: 1px solid #DDD;
 	-webkit-transition:background-color 500ms; -moz-transition:background-color 500ms; -o-transition:background-color 500ms; transition:background-color 500ms;
 }
 
 .bookmark_single:hover {
-	background-color:#f8f8f8
+	background-color:#f8f8f8;
 }
 
 .bookmark_single:hover .bookmark_actions {
@@ -92,6 +118,19 @@ input.disabled, input.disabled:hover, input.disabled:focus {
 	font-weight: bold;
 	display: inline-block;
 	margin-right: 0.8em;
+	margin-top:0.7em;
+}
+
+.bookmark_title a {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	display: inline-block;
+	max-width: 15em;
+}
+
+.bookmark_single:hover .bookmark_title .bookmark_edit_btn {
+	display:inline-block;
 }
 
 .bm_view_list .bookmark_tags {
@@ -99,6 +138,11 @@ input.disabled, input.disabled:hover, input.disabled:focus {
 	top: 0.5em;
 	right: 6em;
 	text-align: right;
+}
+
+.bookmark_tags {
+	left:25%;
+	position: relative;
 }
 .bookmark_tag {
 	display: inline-block;
@@ -190,7 +234,7 @@ input.disabled, input.disabled:hover, input.disabled:focus {
 	font-weight: normal;
 	float:left;
 	padding: 0.3em;
-    	position: relative;
+	position: relative;
 }
 
 ul.tagit li.tagit-new {
@@ -234,8 +278,8 @@ li:hover em { display : none; }
 #tag_filter ul.tagit li.tagit-choice .close{
 	margin-top: -8px;
 	cursor: pointer;
-    	margin-top: -8px;
-    	position: absolute;
+    margin-top: -8px;
+    position: absolute;
 	right: 0.1em;
 	top: 50%;
 }
@@ -247,6 +291,12 @@ li:hover em { display : none; }
 	text-overflow:ellipsis;
 	overflow:hidden;
 	display:block;
+	float:left;
+	position: absolute;
+	left: 25%;
+	width:40%;
+	top: 0.7em;
+	font-weight:500;
 }
 .bookmark_date, .bookmark_submit {
 	font-size:small;
@@ -255,6 +305,7 @@ li:hover em { display : none; }
 	color:gray;
 /* 	margin-top:2.5em; */
 	margin-right: 0.2em;
+	top:0.8em;
 }
 
 /*
@@ -269,8 +320,45 @@ li:hover em { display : none; }
 .bookmark_single:hover .bookmark_url a[href]{ color:gray; }
 
 .bookmark_url { display: none; }
+.bookmark_form_title { 
+	float: left;
+	width:25%;
+}
+
+.bookmark_form_url {
+	float:left;
+	width:25%;
+}
+
+.bookmark_form_tags {
+	width:30%;
+	float:left;
+}
+
+
+.bookmark_form_desc {
+	width:50%;
+}
+
+.bookmark_form_desc textarea {
+	margin-top:-3.4em;
+}
+
 .bookmark_form_title input, .bookmark_form_url input, .bookmark_form_desc textarea  {
 	width: 80%;
+}
+
+.bookmark_single .bookmark_edit_btn {
+	display:none;
+}
+
+.bookmark_single:hover .bookmark_edit_btn {
+	display:block;
+}
+
+.bookmark_single:focus .bookmark_edit_btn {
+	display:block;
+	opacity:1;
 }
 
 .bookmark_single_form {
@@ -283,6 +371,7 @@ li:hover em { display : none; }
 	width: 80%;
 	box-shadow: 0 1px 1px #FFFFFF, 0 1px 0 #BBBBBB inset;
 	margin: 3px;
+	height:6.4em;
 }
 .bm_view_img .bookmark_actions {
 	bottom: 0.7em;

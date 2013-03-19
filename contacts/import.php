@@ -10,6 +10,7 @@ ob_start();
 
 OCP\JSON::checkLoggedIn();
 OCP\App::checkAppEnabled('contacts');
+OCP\JSON::callCheck();
 session_write_close();
 
 $nl = "\n";
@@ -27,19 +28,24 @@ function writeProgress($pct) {
 	OC_Cache::set($progresskey, $pct, 300);
 }
 writeProgress('10');
-$view = $file = null;
+$view = null;
+$inputfile = strtr($_POST['file'], array('/' => '', "\\" => ''));
+if(OC\Files\Filesystem::isFileBlacklisted($inputfile)) {
+	OCP\JSON::error(array('data' => array('message' => 'Upload of blacklisted file: ' . $inputfile)));
+	exit();
+}
 if(isset($_POST['fstype']) && $_POST['fstype'] == 'OC_FilesystemView') {
 	$view = OCP\Files::getStorage('contacts');
-	$file = $view->file_get_contents('/imports/' . $_POST['file']);
+	$file = $view->file_get_contents('/imports/' . $inputfile);
 } else {
-	$file = OC_Filesystem::file_get_contents($_POST['path'] . '/' . $_POST['file']);
+	$file = \OC\Files\Filesystem::file_get_contents($_POST['path'] . '/' . $inputfile);
 }
 if(!$file) {
 	OCP\JSON::error(array('data' => array('message' => 'Import file was empty.')));
 	exit();
 }
 if(isset($_POST['method']) && $_POST['method'] == 'new') {
-	$id = OC_Contacts_Addressbook::add(OCP\USER::getUser(),
+	$id = OCA\Contacts\Addressbook::add(OCP\USER::getUser(),
 		$_POST['addressbookname']);
 	if(!$id) {
 		OCP\JSON::error(
@@ -49,7 +55,7 @@ if(isset($_POST['method']) && $_POST['method'] == 'new') {
 		);
 		exit();
 	}
-	OC_Contacts_Addressbook::setActive($id, 1);
+	OCA\Contacts\Addressbook::setActive($id, 1);
 }else{
 	$id = $_POST['id'];
 	if(!$id) {
@@ -57,13 +63,25 @@ if(isset($_POST['method']) && $_POST['method'] == 'new') {
 			array(
 				'data' => array(
 					'message' => 'Error getting the ID of the address book.',
-					'file'=>$_POST['file']
+					'file'=>OCP\Util::sanitizeHTML($inputfile)
 				)
 			)
 		);
 		exit();
 	}
-	OC_Contacts_App::getAddressbook($id); // is owner access check
+	try {
+		OCA\Contacts\Addressbook::find($id); // is owner access check
+	} catch(Exception $e) {
+		OCP\JSON::error(
+			array(
+				'data' => array(
+					'message' => $e->getMessage(),
+					'file'=>OCP\Util::sanitizeHTML($inputfile)
+				)
+			)
+		);
+		exit();
+	}
 }
 //analyse the contacts file
 writeProgress('40');
@@ -90,40 +108,50 @@ foreach($lines as $line) {
 writeProgress('70');
 $imported = 0;
 $failed = 0;
+$partial = 0;
 if(!count($parts) > 0) {
 	OCP\JSON::error(
 		array(
 			'data' => array(
 				'message' => 'No contacts to import in '
-					. $_POST['file'].'. Please check if the file is corrupted.',
-				'file'=>$_POST['file']
+					. OCP\Util::sanitizeHTML($inputfile).'. Please check if the file is corrupted.',
+				'file'=>OCP\Util::sanitizeHTML($inputfile)
 			)
 		)
 	);
 	if(isset($_POST['fstype']) && $_POST['fstype'] == 'OC_FilesystemView') {
-		if(!$view->unlink('/imports/' . $_POST['file'])) {
+		if(!$view->unlink('/imports/' . $inputfile)) {
 			OCP\Util::writeLog('contacts',
-				'Import: Error unlinking OC_FilesystemView ' . '/' . $_POST['file'],
+				'Import: Error unlinking OC_FilesystemView ' . '/' . OCP\Util::sanitizeHTML($inputfile),
 				OCP\Util::ERROR);
 		}
 	}
 	exit();
 }
 foreach($parts as $part) {
-	$card = OC_VObject::parse($part);
-	if (!$card) {
-		$failed += 1;
-		OCP\Util::writeLog('contacts',
-			'Import: skipping card. Error parsing VCard: ' . $part,
-				OCP\Util::ERROR);
-		continue; // Ditch cards that can't be parsed by Sabre.
+	try {
+		$vcard = Sabre\VObject\Reader::read($part);
+	} catch (Sabre\VObject\ParseException $e) {
+		try {
+			$vcard = Sabre\VObject\Reader::read($part, Sabre\VObject\Reader::OPTION_IGNORE_INVALID_LINES);
+			$partial += 1;
+			OCP\Util::writeLog('contacts',
+				'Import: Retrying reading card. Error parsing VCard: ' . $e->getMessage(),
+					OCP\Util::ERROR);
+		} catch (Exception $e) {
+			$failed += 1;
+			OCP\Util::writeLog('contacts',
+				'Import: skipping card. Error parsing VCard: ' . $e->getMessage(),
+					OCP\Util::ERROR);
+			continue; // Ditch cards that can't be parsed by Sabre.
+		}
 	}
 	try {
-		OC_Contacts_VCard::add($id, $card);
+		OCA\Contacts\VCard::add($id, $vcard);
 		$imported += 1;
 	} catch (Exception $e) {
 		OCP\Util::writeLog('contacts',
-			'Error importing vcard: ' . $e->getMessage() . $nl . $card,
+			'Error importing vcard: ' . $e->getMessage() . $nl . $vcard,
 			OCP\Util::ERROR);
 		$failed += 1;
 	}
@@ -133,9 +161,9 @@ writeProgress('100');
 sleep(3);
 OC_Cache::remove($progresskey);
 if(isset($_POST['fstype']) && $_POST['fstype'] == 'OC_FilesystemView') {
-	if(!$view->unlink('/imports/' . $_POST['file'])) {
+	if(!$view->unlink('/imports/' . $inputfile)) {
 		OCP\Util::writeLog('contacts',
-			'Import: Error unlinking OC_FilesystemView ' . '/' . $_POST['file'],
+			'Import: Error unlinking OC_FilesystemView ' . '/' . $inputfile,
 			OCP\Util::ERROR);
 	}
 }
@@ -144,7 +172,7 @@ OCP\JSON::success(
 		'data' => array(
 			'imported'=>$imported,
 			'failed'=>$failed,
-			'file'=>$_POST['file'],
+			'file'=>OCP\Util::sanitizeHTML($inputfile),
 		)
 	)
 );

@@ -1,14 +1,19 @@
 <?php $TRANSLATIONS = array(
 "Music" => "Mūzika",
-"Add album to playlist" => "Pievienot albūmu sarakstam",
+"songs" => "dziesmas",
+"albums" => "albumi",
+"Add to playlist" => "Pievienot repertuāram",
+"Add album to playlist" => "Pievienot albumu repertuāram",
 "Play" => "Atskaņot",
-"Pause" => "Pauze",
+"Pause" => "Pauzēt",
 "Previous" => "Iepriekšējā",
 "Next" => "Nākamā",
-"Mute" => "Klusums",
-"Unmute" => "Klusums",
+"Mute" => "Apklusināt",
+"Unmute" => "Neapklusināt",
 "Rescan Collection" => "Vēlreiz caurskatīt kolekciju",
 "Artist" => "Izpildītājs",
-"Album" => "Albūms",
-"Title" => "Nosaukums"
+"Album" => "Albums",
+"Title" => "Nosaukums",
+"Media" => "Medijs",
+"Ampache address:" => "Ampache adrese:"
 );

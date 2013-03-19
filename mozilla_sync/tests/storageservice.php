@@ -1,7 +1,7 @@
 <?php
 
 OC_App::loadApp('mozilla_sync');
-class Test_StorageService extends UnitTestCase {
+class Test_StorageService extends PHPUnit_Framework_TestCase {
 
   private $userName = 'testUser';
   private $userHash = 'qwegffggh';
@@ -15,6 +15,7 @@ class Test_StorageService extends UnitTestCase {
 
     // Create ownCloud Test User
     OC_User::createUser($this->userName, $this->password);
+    OC_User::setUserId($this->userName);
     OC_Preferences::setValue($this->userName,'settings', 'email', $this->email);
 
     OCA_mozilla_sync\OutputData::$outputFlag = OCA_mozilla_sync\OutputData::ConstOutputBuffer;

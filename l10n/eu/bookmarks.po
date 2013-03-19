@@ -3,14 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+#  <asieriko@gmail.com>, 2013.
 #   <asieriko@gmail.com>, 2012.
+# Piarres Beobide <pi@beobide.net>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2012-11-08 00:01+0100\n"
-"PO-Revision-Date: 2012-11-07 23:01+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2013-02-22 00:00+0100\n"
+"PO-Revision-Date: 2013-02-20 23:32+0000\n"
+"Last-Translator: asieriko <asieriko@gmail.com>\n"
 "Language-Team: Basque (http://www.transifex.com/projects/p/owncloud/language/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,79 +20,87 @@ msgstr ""
 "Language: eu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: ajax/import.php:9
+msgid "No file provided for import"
+msgstr "Ez da inportatzeko fitxategirik zehaztu"
+
 #: ajax/import.php:21
 msgid "Unsupported file type for import"
-msgstr ""
+msgstr "Fitxategi mota hau ez da onartzen inportatzeko."
 
 #: appinfo/app.php:17
 msgid "Bookmarks"
 msgstr "Laster-markak"
 
-#: js/addBm.js:42 js/bookmarks.js:230
+#: js/addBm.js:42 js/bookmarks.js:235
 msgid "Tags"
 msgstr "Etiketak"
 
 #: js/bookmarks.js:22
 msgid "Filter by tag"
-msgstr ""
+msgstr "Iragazi etiketaren arabera"
 
 #: js/bookmarks.js:132
 msgid "Edit bookmark"
 msgstr "Editatu laster-marka"
 
-#: js/bookmarks.js:369
+#: js/bookmarks.js:366
 msgid "Are you sure you want to remove this tag from every entry?"
 msgstr "Ziur zaude etiketa hau sarrera guztietatik ezabatu nahi duzula?"
 
-#: js/bookmarks.js:370
+#: js/bookmarks.js:367
 msgid "Warning"
 msgstr "Abisua"
 
-#: js/settings.js:25
-msgid "Import completed successfully."
-msgstr ""
+#: js/settings.js:18
+msgid "Import error"
+msgstr "Inportazio errorea"
 
-#: js/settings.js:56
+#: js/settings.js:29
+msgid "Import completed successfully."
+msgstr "Inportazioa ongi egin da."
+
+#: js/settings.js:60
 msgid "Uploading..."
-msgstr ""
+msgstr "Igotzen..."
 
 #: lib/search.php:38
 msgid "Bookm."
 msgstr "Lasterm."
 
-#: templates/addBm.php:11
+#: templates/addBm.php:5
 msgid "Add a bookmark"
 msgstr "Gehitu laster-marka"
 
-#: templates/addBm.php:14
+#: templates/addBm.php:8
 msgid "Close"
 msgstr "Itxi"
 
-#: templates/addBm.php:22 templates/js_tpl.php:33
+#: templates/addBm.php:16 templates/js_tpl.php:27
 msgid "The title of the page"
 msgstr "Orriaren izenburua"
 
-#: templates/addBm.php:27 templates/js_tpl.php:37
+#: templates/addBm.php:21 templates/js_tpl.php:31
 msgid "The address of the page"
 msgstr "Orriaren helbidea"
 
-#: templates/addBm.php:40 templates/js_tpl.php:46
+#: templates/addBm.php:34 templates/js_tpl.php:40
 msgid "Description of the page"
 msgstr "Orriaren deskribapena"
 
-#: templates/addBm.php:44 templates/js_tpl.php:50
+#: templates/addBm.php:38 templates/js_tpl.php:44
 msgid "Save"
 msgstr "Gorde"
 
-#: templates/js_tpl.php:6 templates/js_tpl.php:64
+#: templates/js_tpl.php:6 templates/js_tpl.php:58
 msgid "Delete"
 msgstr "Ezabatu"
 
-#: templates/js_tpl.php:20 templates/js_tpl.php:60
+#: templates/js_tpl.php:14 templates/js_tpl.php:54
 msgid "Edit"
 msgstr "Editatu"
 
-#: templates/js_tpl.php:49
+#: templates/js_tpl.php:43
 msgid "Cancel"
 msgstr "Ezeztatu"
 
@@ -110,9 +120,9 @@ msgstr "Helbidea"
 
 #: templates/list.php:23
 msgid "Add"
-msgstr ""
+msgstr "Gehitu"
 
-#: templates/list.php:30
+#: templates/list.php:31
 msgid "Related Tags"
 msgstr "Erlazionatutako etiketak"
 
@@ -120,21 +130,21 @@ msgstr "Erlazionatutako etiketak"
 msgid "Settings"
 msgstr "Ezarpenak"
 
-#: templates/list.php:52
+#: templates/list.php:54
 msgid "You have no bookmarks"
 msgstr "Ez duzu laster-markarik"
 
-#: templates/list.php:57
+#: templates/list.php:59
 msgid "You can also try to import a bookmark file"
-msgstr ""
+msgstr "Laster-marka fitxategi bat inportatzen saia zaitezke"
 
 #: templates/settings.php:11
 msgid "Bookmarklet"
-msgstr ""
+msgstr "Bookmarklet"
 
 #: templates/settings.php:23
 msgid "Export & Import"
-msgstr ""
+msgstr "Exportatu eta inportatu"
 
 #: templates/settings.php:24
 msgid "Export"

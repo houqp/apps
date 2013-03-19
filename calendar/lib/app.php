@@ -42,7 +42,14 @@ class OC_Calendar_App{
 
 		$calendar = OC_Calendar_Calendar::find($id);
 		// FIXME: Correct arguments to just check for permissions
-		if($security === true || $shared === true) {
+		if($security === true && $shared === false) {
+			if(OCP\User::getUser() === $calendar['userid']){
+				return $calendar;
+			}else{
+				return false;
+			}
+		}
+		if($security === true && $shared === true) {
 			if(OCP\Share::getItemSharedWithBySource('calendar', $id)) {
 				return $calendar;
 			}
@@ -109,7 +116,7 @@ class OC_Calendar_App{
 	 * @brief returns the default categories of ownCloud
 	 * @return (array) $categories
 	 */
-	protected static function getDefaultCategories() {
+	public static function getDefaultCategories() {
 		return array(
 			(string)self::$l10n->t('Birthday'),
 			(string)self::$l10n->t('Business'),
@@ -133,9 +140,12 @@ class OC_Calendar_App{
 	 * @brief returns the vcategories object of the user
 	 * @return (object) $vcategories
 	 */
-	protected static function getVCategories() {
+	public static function getVCategories() {
 		if (is_null(self::$categories)) {
-			self::$categories = new OC_VCategories('calendar',
+			if(OC_VCategories::isEmpty('event')) {
+				self::scanCategories();
+			}
+			self::$categories = new OC_VCategories('event',
 				null,
 				self::getDefaultCategories());
 		}
@@ -161,18 +171,32 @@ class OC_Calendar_App{
 			if(count($calendars) > 0) {
 				$events = array();
 				foreach($calendars as $calendar) {
-					$calendar_events = OC_Calendar_Object::all($calendar['id']);
-					$events = $events + $calendar_events;
+					if($calendar['userid'] === OCP\User::getUser()) {
+						$calendar_events = OC_Calendar_Object::all($calendar['id']);
+						$events = $events + $calendar_events;
+					}
 				}
 			}
 		}
 		if(is_array($events) && count($events) > 0) {
-			$vcategories = self::getVCategories();
+			$vcategories = new OC_VCategories('event');
 			$vcategories->delete($vcategories->categories());
 			foreach($events as $event) {
 				$vobject = OC_VObject::parse($event['calendardata']);
 				if(!is_null($vobject)) {
-					self::loadCategoriesFromVCalendar($vobject);
+					$object = null;
+					if (isset($calendar->VEVENT)) {
+						$object = $calendar->VEVENT;
+					} else
+					if (isset($calendar->VTODO)) {
+						$object = $calendar->VTODO;
+					} else
+					if (isset($calendar->VJOURNAL)) {
+						$object = $calendar->VJOURNAL;
+					}
+					if ($object) {
+						$vcategories->loadFromVObject($event['id'], $vobject, true);
+					}
 				}
 			}
 		}
@@ -182,7 +206,7 @@ class OC_Calendar_App{
 	 * check VEvent for new categories.
 	 * @see OC_VCategories::loadFromVObject
 	 */
-	public static function loadCategoriesFromVCalendar(OC_VObject $calendar) {
+	public static function loadCategoriesFromVCalendar($id, OC_VObject $calendar) {
 		$object = null;
 		if (isset($calendar->VEVENT)) {
 			$object = $calendar->VEVENT;
@@ -194,8 +218,16 @@ class OC_Calendar_App{
 			$object = $calendar->VJOURNAL;
 		}
 		if ($object) {
-			self::getVCategories()->loadFromVObject($object, true);
+			self::getVCategories()->loadFromVObject($id, $object, true);
 		}
+	}
+
+ 	/**
+	 * @brief returns the options for the access class of an event
+	 * @return array - valid inputs for the access class of an event
+	 */
+	public static function getAccessClassOptions() {
+		return OC_Calendar_Object::getAccessClassOptions(self::$l10n);
 	}
 
 	/**
@@ -293,12 +325,11 @@ class OC_Calendar_App{
 	 * @param (int) $id - id of the calendar / event
 	 * @param (string) $type - type of the id (calendar/event)
 	 * @return (int) $permissions - CRUDS permissions
+	 * @param (string) $accessclass - access class (rfc5545, section 3.8.1.3)
 	 * @see OCP\Share
 	 */
-	public static function getPermissions($id, $type) {
-		 $permissions_all = OCP\Share::PERMISSION_CREATE
-				| OCP\Share::PERMISSION_READ | OCP\Share::PERMISSION_UPDATE
-				| OCP\Share::PERMISSION_DELETE | OCP\Share::PERMISSION_SHARE;
+	public static function getPermissions($id, $type, $accessclass = '') {
+		 $permissions_all = OCP\PERMISSION_ALL;
 
 		if($type == self::CALENDAR) {
 			$calendar = self::getCalendar($id, false, false);
@@ -326,10 +357,35 @@ class OC_Calendar_App{
 				if ($sharedEvent) {
 					$event_permissions = $sharedEvent['permissions'];
 				}
-				return max($calendar_permissions, $event_permissions);
+				if ($accessclass === 'PRIVATE') {
+					return 0;
+				} elseif ($accessclass === 'CONFIDENTIAL') {
+					return OCP\PERMISSION_READ;
+				} else {
+					return max($calendar_permissions, $event_permissions);
+				}
 			}
 		}
 		return 0;
+	}
+
+	/*
+	 * @brief Get the permissions for an access class 
+	 * @param (string) $accessclass - access class (rfc5545, section 3.8.1.3)
+	 * @return (int) $permissions - CRUDS permissions
+	 * @see OCP\Share
+	 */
+	public static function getAccessClassPermissions($accessclass = '') {
+
+		switch($accessclass) {
+			case 'CONFIDENTIAL':
+				return OCP\PERMISSION_READ;
+			case 'PUBLIC':
+			case '':
+				return (OCP\PERMISSION_READ | OCP\PERMISSION_UPDATE | OCP\PERMISSION_DELETE);
+			default:
+				return 0;
+		}
 	}
 
 	/**
@@ -352,7 +408,7 @@ class OC_Calendar_App{
 				$calendar = self::getCalendar($calendarid);
 				OCP\Response::enableCaching(0);
 				OCP\Response::setETagHeader($calendar['ctag']);
-				$events = OC_Calendar_Object::allInPeriod($calendarid, $start, $end);
+				$events = OC_Calendar_Object::allInPeriod($calendarid, $start, $end, $calendar['userid'] !== OCP\User::getUser());
 			} else {
 				OCP\Util::emitHook('OC_Calendar', 'getEvents', array('calendar_id' => $calendarid, 'events' => &$events));
 			}
@@ -367,22 +423,48 @@ class OC_Calendar_App{
 	 * @param (int) $end - DateTime object of end
 	 * @return (array) $output - readable output
 	 */
-	public static function generateEventOutput($event, $start, $end) {
+	public static function generateEventOutput(array $event, $start, $end) {
+		\OCP\Util::writeLog('calendar', __METHOD__.' event: '.print_r($event['summary'], true), \OCP\Util::DEBUG);
 		if(!isset($event['calendardata']) && !isset($event['vevent'])) {
 			return false;
 		}
 		if(!isset($event['calendardata']) && isset($event['vevent'])) {
-			$event['calendardata'] = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:ownCloud's Internal iCal System\n" . $event['vevent']->serialize() .  "END:VCALENDAR";
+			$event['calendardata'] = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:ownCloud's Internal iCal System\n"
+				. $event['vevent']->serialize() .  "END:VCALENDAR";
 		}
 		$object = OC_VObject::parse($event['calendardata']);
-		$vevent = $object->VEVENT;
-		$return = array();
+		if(!$object) {
+			\OCP\Util::writeLog('calendar', __METHOD__.' Error parsing event: '.print_r($event, true), \OCP\Util::DEBUG);
+			return array();
+		}
+
+		$output = array();
+
+		if($object->name === 'VEVENT') {
+			$vevent = $object;
+		} elseif(isset($object->VEVENT)) {
+			$vevent = $object->VEVENT;
+		} else {
+			\OCP\Util::writeLog('calendar', __METHOD__.' Object contains not event: '.print_r($event, true), \OCP\Util::DEBUG);
+			return $output;
+		}
 		$id = $event['id'];
+		if(OC_Calendar_Object::getowner($id) !== OCP\USER::getUser()) {
+			// do not show events with private or unknown access class
+			if (isset($vevent->CLASS)
+				&& ($vevent->CLASS->value === 'CONFIDENTIAL'
+				|| $vevent->CLASS->value === 'PRIVATE'
+				|| $vevent->CLASS->value === ''))
+			{
+				return $output;
+			}
+			$object = OC_Calendar_Object::cleanByAccessClass($id, $object);
+		}
 		$allday = ($vevent->DTSTART->getDateType() == Sabre\VObject\Property\DateTime::DATE)?true:false;
 		$last_modified = @$vevent->__get('LAST-MODIFIED');
 		$lastmodified = ($last_modified)?$last_modified->getDateTime()->format('U'):0;
 		$staticoutput = array('id'=>(int)$event['id'],
-						'title' => ($event['summary']!=null || $event['summary'] != '')?$event['summary']: self::$l10n->t('unnamed'),
+						'title' => (!is_null($vevent->SUMMARY) && $vevent->SUMMARY->value != '')? $vevent->SUMMARY->value: self::$l10n->t('unnamed'),
 						'description' => isset($vevent->DESCRIPTION)?$vevent->DESCRIPTION->value:'',
 						'lastmodified'=>$lastmodified,
 						'allDay'=>$allday);
@@ -403,7 +485,7 @@ class OC_Calendar_App{
 					$dynamicoutput['start'] = $start_dt->format('Y-m-d H:i:s');
 					$dynamicoutput['end'] = $end_dt->format('Y-m-d H:i:s');
 				}
-				$return[] = array_merge($staticoutput, $dynamicoutput);
+				$output[] = array_merge($staticoutput, $dynamicoutput);
 			}
 		}else{
 			if(OC_Calendar_Object::isrepeating($id) || $event['repeating'] == 1) {
@@ -414,9 +496,10 @@ class OC_Calendar_App{
 					continue;
 				}
 				$dynamicoutput = OC_Calendar_Object::generateStartEndDate($singleevent->DTSTART, OC_Calendar_Object::getDTEndFromVEvent($singleevent), $allday, self::$tz);
-				$return[] = array_merge($staticoutput, $dynamicoutput);
+				$output[] = array_merge($staticoutput, $dynamicoutput);
 			}
 		}
-		return $return;
+		\OCP\Util::writeLog('calendar', __METHOD__.' event: '.print_r($event['summary'], true) . ' done', \OCP\Util::DEBUG);
+		return $output;
 	}
 }

@@ -3,21 +3,24 @@
  */
 
 (function( $ ) {
-	$.widget('ui.combobox', {
+	$.widget('oc.combobox', {
 		options: {
 			id: null,
-			name: null,
 			showButton: false,
-			editable: true
+			editable: true,
+			singleclick: false,
 		},
 		_create: function() {
 			var self = this,
 				select = this.element.hide(),
 				selected = select.children(':selected'),
 				value = selected.val() ? selected.text() : '';
-			var input = this.input = $('<input type="text">')
+			var name = this.element.attr('name');
+			//this.element.attr('name', 'old_' + name)
+			var input = this.input = $('<input type="text" />')
 				.insertAfter( select )
 				.val( value )
+				//.attr('name', name)
 				.autocomplete({
 					delay: 0,
 					minLength: 0,
@@ -45,17 +48,29 @@
 						self._trigger('selected', event, {
 							item: ui.item.option
 						});
+						select.children('option').each(function() {
+							if ($(this).text().toLowerCase() === $(ui.item.option).text().toLowerCase()) {
+								$(this).attr('selected', 'selected');
+							} else {
+								$(this).removeAttr('selected');
+							}
+						});
+						select.trigger('change');
 					},
 					change: function( event, ui ) {
-						if ( !ui.item ) {
-							var matcher = new RegExp( '^' + $.ui.autocomplete.escapeRegex( $(this).val() ) + '$', 'i' ),
+						if(!ui.item) {
+							var matcher = new RegExp( '^' + $.ui.autocomplete.escapeRegex($(this).val()) + '$', 'i'),
 								valid = false;
 							self.input.val($(this).val());
 							//self.input.trigger('change');
 							select.children('option').each(function() {
-								if ( $( this ).text().match( matcher ) ) {
+								if ($(this).text().match(matcher)) {
 									this.selected = valid = true;
-									return false;
+									$(this).attr('selected', 'selected');
+									select.trigger('change');
+									//return false;
+								} else {
+									$(this).removeAttr('selected');
 								}
 							});
 							if ( !self.options['editable'] && !valid ) {
@@ -64,13 +79,16 @@
 								select.val( "" );
 								input.data('autocomplete').term = '';
 								return false;
+							} else if(!valid) {
+								select.append('<option selected="selected">' + $(this).val() + '</option>');
+								select.trigger('change');
 							}
 						}
 					}
 				})
 				.addClass('ui-widget ui-widget-content ui-corner-left');
 
-			input.data('autocomplete')._renderItem = function( ul, item ) {
+			input.data('uiAutocomplete')._renderItem = function( ul, item ) {
 				return $('<li></li>')
 					.data('item.autocomplete', item )
 					.append('<a>' + item.label + '</a>')
@@ -80,10 +98,20 @@
 				self._setOption(key, value);
 			});
 
-			input.dblclick(function() {
-				// pass empty string as value to search for, displaying all results
-				input.autocomplete('search', '');
-			});
+			var clickHandler = function(e) {
+				var w = self.input.autocomplete('widget');
+				if(w.is(':visible')) {
+					self.input.autocomplete('close');
+				} else {
+					input.autocomplete('search', '');
+				}
+			}
+			
+			if(this.options['singleclick'] === true) {
+				input.click(clickHandler);
+			} else {
+				input.dblclick(clickHandler);
+			}
 
 			if(this.options['showButton']) {
 				this.button = $('<button type="button">&nbsp;</button>')
@@ -127,10 +155,6 @@
 				case 'id':
 					this.options['id'] = value;
 					this.input.attr('id', value);
-					break;
-				case 'name':
-					this.options['name'] = value;
-					this.input.attr('name', value);
 					break;
 				case 'attributes':
 					var input = this.input;

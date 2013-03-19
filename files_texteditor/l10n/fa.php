@@ -1,6 +1,11 @@
 <?php $TRANSLATIONS = array(
 "Save" => "ذخیره",
+"Search:" => "جستجو",
 "Close" => "بستن",
+"Next" => "بعدی",
+"Clear" => "معلوم",
 "Saving..." => "در حال ذخیره سازی...",
-"An error occurred!" => "یک خطا رخ‌داده است!"
+"Failed to save file" => "برای ذخیره سازی در فایل انجام نشد",
+"An error occurred!" => "یک خطا رخ‌داده است!",
+"There were unsaved changes, click here to go back" => "There were unsaved changes, click here to go back"
 );

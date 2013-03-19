@@ -4,7 +4,7 @@
  * ownCloud - Updater plugin
  *
  * @author Victor Dubiniuk
- * @copyright 2012 Victor Dubiniuk victor.dubiniuk@gmail.com
+ * @copyright 2012-2013 Victor Dubiniuk victor.dubiniuk@gmail.com
  *
  * This file is licensed under the Affero General Public License version 3 or
  * later.
@@ -34,12 +34,12 @@ class App {
 		return \OC::$SERVERROOT . '/backup/';
 	}
 
-	public static function getSourcePath($version, $url) {
-		return \OCP\Config::getAppValue(self::APP_ID, md5($version . $url), '');
+	public static function getSource($url, $version) {
+		return \OCP\Config::getAppValue(self::APP_ID, md5($version . $url), false);
 	}
 
-	public static function setSourcePath($version, $url, $path) {
-		\OCP\Config::setAppValue(self::APP_ID, md5($version . $url), $path);
+	public static function setSource($url, $version, $isDownloaded) {
+		\OCP\Config::setAppValue(self::APP_ID, md5($version . $url), $isDownloaded);
 	}
 	
 	public static function getRecentBackupPath() {
@@ -48,6 +48,10 @@ class App {
 
 	public static function setRecentBackupPath($path) {
 		\OCP\Config::setAppValue(self::APP_ID, self::LAST_BACKUP_PATH, $path);
+	}
+	
+	public static function log($message, $level= \OC_Log::ERROR) {
+		\OC_Log::write(self::APP_ID, $message, $level);
 	}
 }
 
