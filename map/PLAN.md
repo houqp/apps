@@ -7,17 +7,19 @@ Following features have already been implemented by eMerzh:
 * when user clicked into the app, they should see a map!
   * The map should take over the whole content area
 * provide a search bar so user can search for location and update the view in the map
-* add place bookmark
+* add points (place bookmark)
 
 Following features haven't been implemented yet:
 
+* map app plugin system
 * center map to user's location on app start
 * get direction
-* place bookmark management (delete, rename, share, etc)
-  * not sure whether we should implement this feature in bookmark app though
+* more point management features (delete, rename, share, etc)
   * give tags to bookmarks (good restaurants, bars that sucks, etc)
 * route management (add, share, etc)
-* communication API for OC apps and other map applications
+  * parse route from GPX/KML
+  * a workout plugin to share(show off) our workout route
+* communication API for map app to talk with other OC apps
 * connect map app with calendar app
   * so users can see events' location on a small embedded map.
 * connect map app with contact app
@@ -30,21 +32,34 @@ Following features haven't been implemented yet:
   * last known location of my device
   * real time device location tracking
 * connect map app with imageviewer app?
-  * show images based on it's taken location on the map (good for showcase pictures taken during travel)
+  * show images based on it's taken location on the map (good for showcase
+    pictures taken during travel)
 * fetch data from services like scheme and display events on the map?
 
 
 ## Attack Plan
 
-* port current map app to new appframework, using AngularJS of course :)
-* implement map app's own basic features:
-  * bookmark management
+### Get prepared
+* learn more about AngularJS and doctrine
+* learn more about leaflet and API for Openrouteservice, mapquest
+* dive into OC's API, hook system, etc
+* do workout to collect lots of route data for later use ;)
+
+### The core part
+* port current map app to new appframework, using AngularJS and doctrine :)
+* make sure the map app can robustly manage points and routes
+  (store, export, import, edit and share).
+
+### Adding features
+* design and implement map app's plugin system
+* write features using map app's plugin system:
   * getting directions
-  * route management
-* design and implement map app API for other OC apps to use
-  * the first usage of the API can be showing location in calendar's events
-  * show people's location in contact app
-* design and implement map app API for other general applications (marble for example)
+  * advanced point and route management
+* integrate map app with other OC maps
+  * show embedded map in contact calendar app.
+
+### Adding more features
+* design and implement map app API for expernal applications (marble for example)
   * see if we can coordinate with marble GSoC project at KDE side for this part
 * if I got extra time, pick some of the extensions to hack on
 
