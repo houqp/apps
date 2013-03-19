@@ -15,14 +15,14 @@ Following features haven't been implemented yet:
 * center map to user's location on app start
 * get direction
 * more point management features (delete, rename, share, etc)
-  * give tags to bookmarks (good restaurants, bars that sucks, etc)
+  * give tags to points (good restaurants, bars that sucks, etc)
 * route management (add, share, etc)
   * parse route from GPX/KML
-  * a workout plugin to share(show off) our workout route
-* communication API for map app to talk with other OC apps
-* connect map app with calendar app
+  * a workout plugin to share workout route
+* plugin/hook system for map app to talk with other OC apps
+* integrate map app with calendar app
   * so users can see events' location on a small embedded map.
-* connect map app with contact app
+* integrate map app with contact app
   * so users can see people's location on a small embedded map.
 
 
@@ -31,9 +31,11 @@ Following features haven't been implemented yet:
   * integrate with ownPrey app
   * last known location of my device
   * real time device location tracking
-* connect map app with imageviewer app?
+* communicate with imageviewer app?
   * show images based on it's taken location on the map (good for showcase
     pictures taken during travel)
+* display all contacts on a map
+* show all events from calendar app on a map
 * fetch data from services like scheme and display events on the map?
 
 
@@ -56,7 +58,7 @@ Following features haven't been implemented yet:
   * getting directions
   * advanced point and route management
 * integrate map app with other OC maps
-  * show embedded map in contact calendar app.
+  * show embedded map in contact/calendar app.
 
 ### Adding more features
 * design and implement map app API for expernal applications (marble for example)
