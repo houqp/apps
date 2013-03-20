@@ -27,16 +27,32 @@ Following features haven't been implemented yet:
 
 
 ## Possible extensions
+* enable tile caching
+  * server side caching:
+    * http://wiki.openstreetmap.org/wiki/ProxySimplePHP
+	  * example:  http://wiki.openstreetmap.org/wiki/OpenLayers
+  * client side caching:
+    * make use of localStorage in browser?
 * using map app for device tracking
   * integrate with ownPrey app
   * last known location of my device
   * real time device location tracking
+* travel planning feature
 * communicate with imageviewer app?
   * show images based on it's taken location on the map (good for showcase
     pictures taken during travel)
 * display all contacts on a map
 * show all events from calendar app on a map
 * fetch data from services like scheme and display events on the map?
+
+
+## Tools/Resources/Libraries that can be reused
+* Search & Reverse Geocoding/Address lookup
+ * http://wiki.openstreetmap.org/wiki/Nominatim
+* KML/GPX libraries implemented in JS and PHP
+* leaflet
+* MapQuest: http://open.mapquestapi.com
+* Openrouteservice: http://openrouteservice.org
 
 
 ## Attack Plan
@@ -46,6 +62,7 @@ Following features haven't been implemented yet:
 * learn more about leaflet and API for Openrouteservice, mapquest
 * dive into OC's API, hook system, etc
 * do workout to collect lots of route data for later use ;)
+* discuss with Marble GSoC project on API design and possible collaboration.
 
 ### The core part
 * port current map app to new appframework, using AngularJS and doctrine :)
@@ -61,7 +78,7 @@ Following features haven't been implemented yet:
   * show embedded map in contact/calendar app.
 
 ### Adding more features
-* design and implement map app API for expernal applications (marble for example)
+* design and implement map app API for external applications (marble for example)
   * see if we can coordinate with marble GSoC project at KDE side for this part
 * if I got extra time, pick some of the extensions to hack on
 
